@@ -5,6 +5,8 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	_ "image/jpeg"
+	_ "image/png"
 	"log"
 	"os"
 	"path/filepath"
@@ -41,11 +43,19 @@ func main() {
 }
 
 func mainloop() {
-
+	bg := loadTex("blue.jpg")
+	r := image.Point{}
+	win.Copy(r, bg, bg.Bounds(), draw.Over, nil)
 }
 
 func handle(e interface{}) {
 	fmt.Println(e)
+}
+
+func loadTex(fname string) screen.Texture {
+	buf := buffer(decode(fname))
+	defer buf.Release()
+	return texture(buf)
 }
 
 func texture(buf screen.Buffer) screen.Texture {
