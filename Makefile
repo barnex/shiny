@@ -1,3 +1,3 @@
 all:
-	go fmt
+	goimports -w *.go
 	go build
