@@ -10,14 +10,19 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 
 	"golang.org/x/exp/shiny/driver"
 	"golang.org/x/exp/shiny/screen"
+	"golang.org/x/image/math/f64"
+	"golang.org/x/mobile/event/paint"
+	"golang.org/x/mobile/event/size"
 )
 
 var (
-	scr screen.Screen
-	win screen.Window
+	scr     screen.Screen
+	win     screen.Window
+	winSize image.Point
 )
 
 var (
@@ -34,7 +39,7 @@ func main() {
 
 		//win.Fill(win.Size(), white, draw.Over)
 
-		go mainloop() // start after graphics initialized
+		initialize()
 
 		for {
 			handle(win.NextEvent())
@@ -42,14 +47,49 @@ func main() {
 	})
 }
 
-func mainloop() {
-	bg := loadTex("blue.jpg")
-	r := image.Point{}
-	win.Copy(r, bg, bg.Bounds(), draw.Over, nil)
+func initialize() {
+	//bg := loadTex("blue.jpg")
+
+	//win.Copy(r, bg, bg.Bounds(), draw.Over, nil)
+
+	go func() {
+		for range time.Tick(1000 * time.Millisecond) {
+			win.Send(tick{})
+		}
+	}()
 }
 
+type tick struct{}
+
 func handle(e interface{}) {
-	fmt.Println(e)
+
+	fmt.Printf("%T %#v\n", e, e)
+	switch e := e.(type) {
+	default:
+		fmt.Printf("%T %#v\n", e, e)
+	case tick:
+		handleTick()
+	case size.Event:
+		handleResize(e)
+	case paint.Event:
+		repaint()
+	}
+}
+
+func repaint() {
+	id := f64.Aff3{1, 0, 0,
+		0, 1, 0}
+	win.DrawUniform(id, white, image.Rect(0, 0, winSize.X, winSize.Y), draw.Over, nil)
+	win.Publish()
+}
+
+func handleTick() {
+
+}
+
+func handleResize(s size.Event) {
+	winSize = image.Point{s.WidthPx, s.HeightPx}
+	win.Send(paint.Event{})
 }
 
 func loadTex(fname string) screen.Texture {
