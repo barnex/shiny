@@ -12,7 +12,7 @@ import (
 	"path/filepath"
 	"time"
 
-	"golang.org/x/exp/shiny/driver"
+	"golang.org/x/exp/shiny/driver/gldriver"
 	"golang.org/x/exp/shiny/screen"
 	"golang.org/x/image/math/f64"
 	"golang.org/x/mobile/event/paint"
@@ -28,10 +28,12 @@ var (
 var (
 	white = color.White
 	black = color.Black
+	sky   screen.Texture
+	objx  int
 )
 
 func main() {
-	driver.Main(func(s screen.Screen) {
+	gldriver.Main(func(s screen.Screen) {
 		w, err := s.NewWindow(nil)
 		check(err)
 		scr = s
@@ -48,12 +50,10 @@ func main() {
 }
 
 func initialize() {
-	//bg := loadTex("blue.jpg")
-
-	//win.Copy(r, bg, bg.Bounds(), draw.Over, nil)
+	sky = loadTex("blue.jpg")
 
 	go func() {
-		for range time.Tick(1000 * time.Millisecond) {
+		for range time.Tick(50 * time.Millisecond) {
 			win.Send(tick{})
 		}
 	}()
@@ -77,14 +77,33 @@ func handle(e interface{}) {
 }
 
 func repaint() {
+	start := time.Now()
+	clearWin()
+	for i := 0; i < 10; i++ {
+		for j := 0; j < 10; j++ {
+			drawTex(sky, pt(objx+i*8, (objx+j*8)/2))
+		}
+	}
+	win.Publish()
+	fmt.Println(time.Since(start))
+}
+
+func drawTex(tex screen.Texture, pos image.Point) {
+	win.Copy(pos, tex, tex.Bounds(), draw.Over, nil)
+}
+
+func clearWin() {
 	id := f64.Aff3{1, 0, 0,
 		0, 1, 0}
 	win.DrawUniform(id, white, image.Rect(0, 0, winSize.X, winSize.Y), draw.Over, nil)
-	win.Publish()
 }
 
 func handleTick() {
-
+	objx++
+	if objx > 300 {
+		objx = 0
+	}
+	win.Send(paint.Event{})
 }
 
 func handleResize(s size.Event) {
@@ -121,6 +140,8 @@ func decode(fname string) image.Image {
 	check(err)
 	return img
 }
+
+func pt(x, y int) image.Point { return image.Point{x, y} }
 
 func check(err error) {
 	if err != nil {
