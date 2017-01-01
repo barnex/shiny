@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
+	"image/color"
 	"image/draw"
 	"log"
 	"os"
@@ -17,12 +18,19 @@ var (
 	win screen.Window
 )
 
+var (
+	white = color.White
+	black = color.Black
+)
+
 func main() {
 	driver.Main(func(s screen.Screen) {
 		w, err := s.NewWindow(nil)
 		check(err)
 		scr = s
 		win = w
+
+		//win.Fill(win.Size(), white, draw.Over)
 
 		go mainloop() // start after graphics initialized
 
@@ -40,9 +48,13 @@ func handle(e interface{}) {
 	fmt.Println(e)
 }
 
-//func texture(t screen.Buffer) screen.Texture{
-//
-//}
+func texture(buf screen.Buffer) screen.Texture {
+	bounds := buf.Bounds()
+	tex, err := scr.NewTexture(bounds.Size())
+	check(err)
+	tex.Upload(image.Point{}, buf, bounds)
+	return tex
+}
 
 func buffer(img image.Image) screen.Buffer {
 	buf, err := scr.NewBuffer(img.Bounds().Size())
@@ -52,7 +64,7 @@ func buffer(img image.Image) screen.Buffer {
 }
 
 func decode(fname string) image.Image {
-	f, err := os.Open(filepath.Join("assets", fname))
+	f, err := os.Open(filepath.Join("asset", fname))
 	check(err)
 	defer f.Close()
 	img, _, err := image.Decode(f)
