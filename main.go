@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"image/color"
+	_ "image/jpeg"
 	_ "image/png"
 	"log"
 	"os"
@@ -23,7 +24,7 @@ var (
 )
 
 var (
-	white = color.White
+	white = color.RGBA{R: 50, G: 50, B: 100}
 	black = color.Black
 	sky   screen.Texture
 	objx  int
@@ -45,14 +46,22 @@ func main() {
 }
 
 func initialize() {
-	sky = loadTex("blue.jpg")
+	blk := load("block1", 64)
+	brk := load("bricks1", 64)
 
+	const D = 64
 	scene = Scene{
 		obj: []Drawer{
-			&Sprite{tex: sky},
-			&Sprite{tex: sky, x: 100, y: 0},
-			&Sprite{tex: sky, x: 100, y: 100},
-			&Sprite{tex: sky, x: 0, y: 100},
+			&Sprite{tex: load("stickman1", 64), x: 0, y: 0},
+			&Sprite{tex: blk, x: D, y: 0},
+			&Sprite{tex: blk, x: D * 2, y: 0},
+			&Sprite{tex: blk, x: D * 3, y: 0},
+			&Sprite{tex: blk, x: D * 3, y: D},
+			&Sprite{tex: brk, x: 128, y: 128},
+			&Sprite{tex: brk, x: 3 * D, y: 128},
+			&Sprite{tex: brk, x: 4 * D, y: 128},
+			&Sprite{tex: brk, x: 4 * D, y: 128 + D},
+			&Sprite{tex: brk, x: 4 * D, y: 6 * D},
 		},
 	}
 
