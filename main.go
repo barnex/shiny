@@ -19,6 +19,7 @@ var (
 	scr     screen.Screen
 	win     screen.Window
 	winSize image.Point
+	scene   Scene
 )
 
 var (
@@ -46,6 +47,15 @@ func main() {
 func initialize() {
 	sky = loadTex("blue.jpg")
 
+	scene = Scene{
+		obj: []Drawer{
+			&Sprite{tex: sky},
+			&Sprite{tex: sky, x: 100, y: 0},
+			&Sprite{tex: sky, x: 100, y: 100},
+			&Sprite{tex: sky, x: 0, y: 100},
+		},
+	}
+
 	go func() {
 		for range time.Tick(20 * time.Millisecond) {
 			win.Send(tick{})
@@ -69,12 +79,7 @@ func handle(e interface{}) {
 }
 
 func handleRepaint() {
-	clearWin()
-	for i := 0; i < 10; i++ {
-		for j := 0; j < 10; j++ {
-			drawTex(sky, pt(objx+i*8, (objx+j*8)/2))
-		}
-	}
+	scene.Draw()
 	win.Publish()
 }
 
