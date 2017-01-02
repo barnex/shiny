@@ -4,17 +4,13 @@ import (
 	"fmt"
 	"image"
 	"image/color"
-	"image/draw"
-	_ "image/jpeg"
 	_ "image/png"
 	"log"
 	"os"
-	"path/filepath"
 	"time"
 
 	"golang.org/x/exp/shiny/driver/gldriver"
 	"golang.org/x/exp/shiny/screen"
-	"golang.org/x/image/math/f64"
 	"golang.org/x/mobile/event/paint"
 	"golang.org/x/mobile/event/size"
 )
@@ -39,8 +35,6 @@ func main() {
 		scr = s
 		win = w
 
-		//win.Fill(win.Size(), white, draw.Over)
-
 		initialize()
 
 		for {
@@ -53,13 +47,11 @@ func initialize() {
 	sky = loadTex("blue.jpg")
 
 	go func() {
-		for range time.Tick(50 * time.Millisecond) {
+		for range time.Tick(20 * time.Millisecond) {
 			win.Send(tick{})
 		}
 	}()
 }
-
-type tick struct{}
 
 func handle(e interface{}) {
 
@@ -72,12 +64,11 @@ func handle(e interface{}) {
 	case size.Event:
 		handleResize(e)
 	case paint.Event:
-		repaint()
+		handleRepaint()
 	}
 }
 
-func repaint() {
-	start := time.Now()
+func handleRepaint() {
 	clearWin()
 	for i := 0; i < 10; i++ {
 		for j := 0; j < 10; j++ {
@@ -85,18 +76,9 @@ func repaint() {
 		}
 	}
 	win.Publish()
-	fmt.Println(time.Since(start))
 }
 
-func drawTex(tex screen.Texture, pos image.Point) {
-	win.Copy(pos, tex, tex.Bounds(), draw.Over, nil)
-}
-
-func clearWin() {
-	id := f64.Aff3{1, 0, 0,
-		0, 1, 0}
-	win.DrawUniform(id, white, image.Rect(0, 0, winSize.X, winSize.Y), draw.Over, nil)
-}
+type tick struct{}
 
 func handleTick() {
 	objx++
@@ -110,38 +92,6 @@ func handleResize(s size.Event) {
 	winSize = image.Point{s.WidthPx, s.HeightPx}
 	win.Send(paint.Event{})
 }
-
-func loadTex(fname string) screen.Texture {
-	buf := buffer(decode(fname))
-	defer buf.Release()
-	return texture(buf)
-}
-
-func texture(buf screen.Buffer) screen.Texture {
-	bounds := buf.Bounds()
-	tex, err := scr.NewTexture(bounds.Size())
-	check(err)
-	tex.Upload(image.Point{}, buf, bounds)
-	return tex
-}
-
-func buffer(img image.Image) screen.Buffer {
-	buf, err := scr.NewBuffer(img.Bounds().Size())
-	check(err) // TODO
-	draw.Draw(buf.RGBA(), buf.Bounds(), img, image.Point{}, draw.Over)
-	return buf
-}
-
-func decode(fname string) image.Image {
-	f, err := os.Open(filepath.Join("asset", fname))
-	check(err)
-	defer f.Close()
-	img, _, err := image.Decode(f)
-	check(err)
-	return img
-}
-
-func pt(x, y int) image.Point { return image.Point{x, y} }
 
 func check(err error) {
 	if err != nil {
