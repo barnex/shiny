@@ -57,7 +57,7 @@ func initialize() {
 	loadMaze()
 
 	go func() {
-		for range time.Tick(20 * time.Millisecond) {
+		for range time.Tick(100 * time.Millisecond) {
 			win.Send(tick{})
 		}
 	}()

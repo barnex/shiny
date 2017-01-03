@@ -27,6 +27,10 @@ func mazeTick() {
 		dir.y = 0
 	}
 
+	if maze1[p2.y][p2.x] != 0 {
+		dir = Pt{}
+	}
+
 	playerPos = playerPos.Add(dir)
 	playerSpr.x = playerPos.x * D
 	playerSpr.y = playerPos.y * D
