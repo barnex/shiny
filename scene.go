@@ -17,6 +17,10 @@ func (s *Scene) Draw() {
 	}
 }
 
+func (s *Scene) Add(x Drawer) {
+	s.obj = append(s.obj, x)
+}
+
 type Sprite struct {
 	tex  screen.Texture
 	x, y int
