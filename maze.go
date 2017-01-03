@@ -1,30 +1,45 @@
 package main
 
-const (
-	X = 1
+var (
+	playerPos = Pt{1, 1}
+	playerSpr Sprite
 )
 
-var maze1 = [][]int{
-	{X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X},
-	{X, 0, 0, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, 0, X, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, 0, X, X, X, X, X, X, X, 0, X, 0, 0, X, X, X, X, 0, 0, X},
-	{X, 0, 0, 0, 0, 0, 0, 0, X, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, 0, X, X, 0, X, X, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, 0, X, 0, 0, 0, X, 0, X, 0, 0, 0, X, X, X, X, X, X, 0, X},
-	{X, 0, X, 0, 0, 0, X, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, X, 0, X},
-	{X, 0, X, X, X, X, X, 0, X, 0, X, 0, 0, 0, 0, 0, 0, X, 0, X},
-	{X, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, X, X, 0, X, 0, X},
-	{X, X, X, X, 0, X, X, X, X, 0, 0, 0, 0, 0, X, X, 0, X, 0, X},
-	{X, 0, 0, X, 0, X, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, X, 0, X},
-	{X, 0, 0, X, 0, X, 0, X, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X},
+func mazeTick() {
+
+	dir := Pt{0, 0}
+	switch {
+	case keyLeft:
+		dir = Pt{-1, 0}
+	case keyRight:
+		dir = Pt{1, 0}
+	case keyUp:
+		dir = Pt{0, -1}
+	case keyDown:
+		dir = Pt{0, 1}
+	}
+
+	p2 := playerPos.Add(dir)
+	if x := p2.x; x < 0 || x >= mazeW {
+		dir.x = 0
+	}
+	if y := p2.y; y < 0 || y >= mazeH {
+		dir.y = 0
+	}
+
+	playerPos = playerPos.Add(dir)
+	playerSpr.x = playerPos.x * D
+	playerSpr.y = playerPos.y * D
 }
+
+const D = 64
 
 func loadMaze() {
 
-	const D = 64
+	av := load("stickman1", D)
+	playerSpr = Sprite{av, 1 * D, 1 * D}
+	scene.Add(&playerSpr)
+
 	blk := load("block1", D)
 
 	for i := range maze1 {
@@ -35,3 +50,28 @@ func loadMaze() {
 		}
 	}
 }
+
+const X = 1
+
+var (
+	maze1 = [][]int{
+		{X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X},
+		{X, 0, 0, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, X},
+		{X, 0, X, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, X},
+		{X, 0, X, X, X, X, X, X, X, 0, X, 0, 0, X, X, X, X, 0, 0, X},
+		{X, 0, 0, 0, 0, 0, 0, 0, X, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, X},
+		{X, 0, X, X, 0, X, X, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
+		{X, 0, X, 0, 0, 0, X, 0, X, 0, 0, 0, X, X, X, X, X, X, 0, X},
+		{X, 0, X, 0, 0, 0, X, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, X, 0, X},
+		{X, 0, X, X, X, X, X, 0, X, 0, X, 0, 0, 0, 0, 0, 0, X, 0, X},
+		{X, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, X, X, 0, X, 0, X},
+		{X, X, X, X, 0, X, X, X, X, 0, 0, 0, 0, 0, X, X, 0, X, 0, X},
+		{X, 0, 0, X, 0, X, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, X, 0, X},
+		{X, 0, 0, X, 0, X, 0, X, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, X},
+		{X, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, X},
+		{X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X},
+	}
+
+	mazeW = len(maze1[0])
+	mazeH = len(maze1)
+)

@@ -12,6 +12,9 @@ import (
 
 	"golang.org/x/exp/shiny/driver/gldriver"
 	"golang.org/x/exp/shiny/screen"
+	"golang.org/x/mobile/event/key"
+	"golang.org/x/mobile/event/lifecycle"
+	"golang.org/x/mobile/event/mouse"
 	"golang.org/x/mobile/event/paint"
 	"golang.org/x/mobile/event/size"
 )
@@ -24,15 +27,20 @@ var (
 )
 
 var (
+	keyLeft, keyRight, keyDown, keyUp bool
+)
+
+var (
 	white = color.RGBA{R: 50, G: 50, B: 100}
 	black = color.Black
 	sky   screen.Texture
-	objx  int
 )
 
 func main() {
 	gldriver.Main(func(s screen.Screen) {
-		w, err := s.NewWindow(nil)
+		width := len(maze1[0]) * D
+		height := len(maze1) * D
+		w, err := s.NewWindow(&screen.NewWindowOptions{width, height})
 		check(err)
 		scr = s
 		win = w
@@ -60,12 +68,45 @@ func handle(e interface{}) {
 	switch e := e.(type) {
 	default:
 		fmt.Printf("unhandled: %T %#v\n", e, e)
-	case tick:
-		handleTick()
-	case size.Event:
-		handleResize(e)
+	case key.Event:
+		handleKey(e)
+	case lifecycle.Event:
+		handleLifecycle(e)
+	case mouse.Event:
+		handleMouse(e)
 	case paint.Event:
 		handleRepaint()
+	case size.Event:
+		handleResize(e)
+	case tick:
+		handleTick()
+	}
+}
+
+func handleMouse(e mouse.Event) {}
+
+func handleKey(e key.Event) {
+	fmt.Printf("%T %#v\n", e, e)
+
+	pressed := e.Direction != key.DirRelease // others are pressed, repeat.
+
+	switch e.Code {
+	default:
+		return
+	case key.CodeLeftArrow:
+		keyLeft = pressed
+	case key.CodeRightArrow:
+		keyRight = pressed
+	case key.CodeDownArrow:
+		keyDown = pressed
+	case key.CodeUpArrow:
+		keyUp = pressed
+	}
+}
+
+func handleLifecycle(e lifecycle.Event) {
+	if e.To == lifecycle.StageDead {
+		exit()
 	}
 }
 
@@ -77,10 +118,7 @@ func handleRepaint() {
 type tick struct{}
 
 func handleTick() {
-	objx++
-	if objx > 300 {
-		objx = 0
-	}
+	mazeTick()
 	win.Send(paint.Event{})
 }
 
