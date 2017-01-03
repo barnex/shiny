@@ -36,11 +36,11 @@ func mazeTick() {
 	playerSpr.y = playerPos.y * D
 }
 
-const D = 64
+const D = 256
 
 func loadMaze() {
 
-	av := load("stickman1", D)
+	av := load("stickman", D)
 	playerSpr = Sprite{av, 1 * D, 1 * D}
 	scene.Add(&playerSpr)
 
