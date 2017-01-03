@@ -23,7 +23,7 @@ var (
 	scr     screen.Screen
 	win     screen.Window
 	winSize image.Point
-	scene   Scene
+	scene   = Scene{background: color.RGBA{R: 150, G: 150, B: 200, A: 255}}
 )
 
 var (
@@ -31,7 +31,6 @@ var (
 )
 
 var (
-	white = color.RGBA{R: 50, G: 50, B: 100}
 	black = color.Black
 	sky   screen.Texture
 )
@@ -64,7 +63,6 @@ func initialize() {
 }
 
 func handle(e interface{}) {
-	//fmt.Printf("%T %#v\n", e, e)
 	switch e := e.(type) {
 	default:
 		fmt.Printf("unhandled: %T %#v\n", e, e)
@@ -124,7 +122,7 @@ func handleTick() {
 
 func handleResize(s size.Event) {
 	winSize = image.Point{s.WidthPx, s.HeightPx}
-	win.Send(paint.Event{})
+	//win.Send(paint.Event{})
 }
 
 func check(err error) {

@@ -1,9 +1,14 @@
 package main
 
-import "golang.org/x/exp/shiny/screen"
+import (
+	"image/color"
+
+	"golang.org/x/exp/shiny/screen"
+)
 
 type Scene struct {
-	obj []Drawer
+	background color.Color
+	obj        []Drawer
 }
 
 type Drawer interface {
@@ -11,7 +16,7 @@ type Drawer interface {
 }
 
 func (s *Scene) Draw() {
-	clearWin()
+	clearWin(s.background)
 	for _, obj := range s.obj {
 		obj.Draw()
 	}
