@@ -36,7 +36,7 @@ func resize(src image.Image, sx, sy int) image.Image {
 		return src
 	}
 	dst := image.NewRGBA(image.Rect(0, 0, sx, sy))
-	draw.ApproxBiLinear.Scale(dst, dst.Bounds(), src, src.Bounds(), draw.Src, nil)
+	draw.CatmullRom.Scale(dst, dst.Bounds(), src, src.Bounds(), draw.Src, nil)
 	return dst
 }
 

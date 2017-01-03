@@ -36,7 +36,7 @@ func mazeTick() {
 	playerSpr.y = playerPos.y * D
 }
 
-const D = 256
+const D = 64
 
 func loadMaze() {
 
