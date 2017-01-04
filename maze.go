@@ -40,10 +40,13 @@ const D = 64
 func loadMaze() {
 
 	player = NewCreature("stickman").PlaceAt(Pt{1, 1})
-
 	scene.Add(player)
 
-	blk := LoadTexture("block3")
+	keyhole := NewCreature("keyhole").PlaceAt(Pt{4, 5})
+	key := NewCreature("key").PlaceAt(Pt{15, 12})
+	scene.Add(key, keyhole)
+
+	blk := LoadTexture("block2")
 
 	for i := range maze1 {
 		for j := range maze1[i] {

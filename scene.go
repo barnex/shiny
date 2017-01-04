@@ -18,8 +18,8 @@ func (s *Scene) Draw() {
 	}
 }
 
-func (s *Scene) Add(x Drawer) {
-	s.obj = append(s.obj, x)
+func (s *Scene) Add(x ...Drawer) {
+	s.obj = append(s.obj, x...)
 }
 
 type Sprite struct {
