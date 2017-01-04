@@ -17,7 +17,7 @@ var (
 	scr     screen.Screen
 	win     screen.Window
 	winSize image.Point
-	scene   = Scene{background: color.RGBA{R: 150, G: 150, B: 200, A: 255}}
+	scene   = Scene{background: color.RGBA{R: 220, G: 220, B: 220, A: 255}}
 )
 
 func main() {

@@ -44,7 +44,7 @@ func loadMaze() {
 	playerSpr = Sprite{av, 1 * D, 1 * D}
 	scene.Add(&playerSpr)
 
-	blk := load("block1", D)
+	blk := load("block3", D)
 
 	for i := range maze1 {
 		for j := range maze1[i] {
