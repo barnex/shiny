@@ -11,9 +11,40 @@ import (
 	"golang.org/x/mobile/event/size"
 )
 
-var (
-	keyLeft, keyRight, keyDown, keyUp bool
+const (
+	KeyInv = iota
+	KeyLeft
+	KeyRight
+	KeyDown
+	KeyUp
+	KeyMax
 )
+
+var (
+	keyPressed  [KeyMax]bool
+	keyReleased [KeyMax]bool
+	keyMap      = map[key.Code]int{
+		key.CodeDownArrow:  KeyDown,
+		key.CodeLeftArrow:  KeyLeft,
+		key.CodeRightArrow: KeyRight,
+		key.CodeUpArrow:    KeyUp,
+	}
+)
+
+func handleTick() {
+	mazeTick()
+
+	win.Send(paint.Event{})
+
+	// complicated dance to ensure that key appears pressed when tick arrives,
+	// even if key was only briefly pressed in between ticks
+	for i, released := range keyReleased {
+		if released {
+			keyPressed[i] = false
+			keyReleased[i] = false
+		}
+	}
+}
 
 func handleEvent(e interface{}) {
 	switch e := e.(type) {
@@ -39,20 +70,15 @@ func handleMouse(e mouse.Event) {}
 func handleKey(e key.Event) {
 	fmt.Printf("%T %#v\n", e, e)
 
-	pressed := e.Direction != key.DirRelease // others are pressed, repeat.
+	pressed := (e.Direction != key.DirRelease) // DirPressed, DirNone both mean pressed (!)
 
-	switch e.Code {
-	default:
-		return
-	case key.CodeLeftArrow:
-		keyLeft = pressed
-	case key.CodeRightArrow:
-		keyRight = pressed
-	case key.CodeDownArrow:
-		keyDown = pressed
-	case key.CodeUpArrow:
-		keyUp = pressed
+	code := keyMap[e.Code]
+	if pressed {
+		keyPressed[code] = true
+	} else {
+		keyReleased[code] = true
 	}
+
 }
 
 func handleLifecycle(e lifecycle.Event) {
@@ -67,11 +93,6 @@ func handleRepaint() {
 }
 
 type tick struct{}
-
-func handleTick() {
-	mazeTick()
-	win.Send(paint.Event{})
-}
 
 func handleResize(s size.Event) {
 	winSize = image.Point{s.WidthPx, s.HeightPx}

@@ -1,25 +1,26 @@
 package main
 
 var (
-	playerPos = Pt{1, 1}
-	playerSpr Sprite
+	player *Creature
 )
 
 func mazeTick() {
 
 	dir := Pt{0, 0}
-	switch {
-	case keyLeft:
-		dir = Pt{-1, 0}
-	case keyRight:
-		dir = Pt{1, 0}
-	case keyUp:
-		dir = Pt{0, -1}
-	case keyDown:
-		dir = Pt{0, 1}
+	if keyPressed[KeyDown] {
+		dir.y++
+	}
+	if keyPressed[KeyLeft] {
+		dir.x--
+	}
+	if keyPressed[KeyRight] {
+		dir.x++
+	}
+	if keyPressed[KeyUp] {
+		dir.y--
 	}
 
-	p2 := playerPos.Add(dir)
+	p2 := player.pos.Add(dir)
 	if x := p2.x; x < 0 || x >= mazeW {
 		dir.x = 0
 	}
@@ -31,25 +32,23 @@ func mazeTick() {
 		dir = Pt{}
 	}
 
-	playerPos = playerPos.Add(dir)
-	playerSpr.x = playerPos.x * D
-	playerSpr.y = playerPos.y * D
+	player.pos = player.pos.Add(dir)
 }
 
 const D = 64
 
 func loadMaze() {
 
-	av := load("stickman", D)
-	playerSpr = Sprite{av, 1 * D, 1 * D}
-	scene.Add(&playerSpr)
+	player = NewCreature("stickman").PlaceAt(Pt{1, 1})
 
-	blk := load("block3", D)
+	scene.Add(player)
+
+	blk := LoadTexture("block3")
 
 	for i := range maze1 {
 		for j := range maze1[i] {
 			if maze1[i][j] != 0 {
-				scene.Add(&Sprite{blk, j * D, i * D})
+				scene.Add(&Sprite{blk, Pt{j * D, i * D}})
 			}
 		}
 	}

@@ -1,10 +1,6 @@
 package main
 
-import (
-	"image/color"
-
-	"golang.org/x/exp/shiny/screen"
-)
+import "image/color"
 
 type Scene struct {
 	background color.Color
@@ -27,10 +23,10 @@ func (s *Scene) Add(x Drawer) {
 }
 
 type Sprite struct {
-	tex  screen.Texture
-	x, y int
+	tex Texture
+	pos Pt
 }
 
 func (s *Sprite) Draw() {
-	drawTex(s.tex, pt(s.x, s.y))
+	s.tex.Draw(s.pos)
 }

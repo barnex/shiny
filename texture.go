@@ -10,6 +10,18 @@ import (
 	"golang.org/x/exp/shiny/screen"
 )
 
+type Texture struct {
+	tex screen.Texture
+}
+
+func LoadTexture(fname string) Texture {
+	return Texture{load(fname, D)}
+}
+
+func (t *Texture) Draw(r Pt) {
+	drawTex(t.tex, image.Point{r.x, r.y})
+}
+
 func load(fname string, size int) screen.Texture {
 	buf := buffer(resize(decode(fname), size, size))
 	defer buf.Release()
