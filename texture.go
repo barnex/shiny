@@ -18,8 +18,8 @@ func LoadTexture(fname string) Texture {
 	return Texture{load(fname, D)}
 }
 
-func (t *Texture) Draw(r Pt) {
-	drawTex(t.tex, image.Point{r.x, r.y})
+func (t *Texture) DrawAt(r Pt) {
+	drawTex(t.tex, r.Point())
 }
 
 func load(fname string, size int) screen.Texture {

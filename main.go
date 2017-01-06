@@ -2,7 +2,6 @@ package main
 
 import (
 	"image"
-	"image/color"
 	_ "image/jpeg"
 	_ "image/png"
 	"log"
@@ -14,16 +13,19 @@ import (
 )
 
 var (
-	scr     screen.Screen
-	win     screen.Window
-	winSize image.Point
-	scene   = Scene{background: color.RGBA{R: 220, G: 220, B: 220, A: 255}}
+	scr      screen.Screen
+	win      screen.Window
+	winSize  image.Point
+	toplevel interface {
+		Ticker
+		Drawer
+	}
 )
 
 func main() {
 	gldriver.Main(func(s screen.Screen) {
-		width := len(maze1[0]) * D
-		height := len(maze1) * D
+		width := 1920
+		height := 1080
 		initWindow(s, width, height)
 
 		initialize()
@@ -42,7 +44,7 @@ func initWindow(s screen.Screen, width, height int) {
 }
 
 func initialize() {
-	loadMaze()
+	toplevel = LoadMaze()
 
 	go func() {
 		for range time.Tick(200 * time.Millisecond) {

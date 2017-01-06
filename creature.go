@@ -1,8 +1,8 @@
 package main
 
 type Creature struct {
-	pos Pt
-	tex Texture
+	tex         Texture
+	pos, target Pt
 }
 
 func NewCreature(tex string) *Creature {
@@ -11,12 +11,17 @@ func NewCreature(tex string) *Creature {
 	}
 }
 
+func (c *Creature) Tick() {
+
+}
+
 func (c *Creature) Draw() {
-	c.tex.Draw(screenPos(c.pos))
+	c.tex.DrawAt(screenPos(c.pos))
 }
 
 func (c *Creature) PlaceAt(r Pt) *Creature {
 	c.pos = r
+	c.target = r
 	return c
 }
 

@@ -9,14 +9,22 @@ import (
 	"golang.org/x/image/math/f64"
 )
 
-func drawTex(tex screen.Texture, pos image.Point) {
-	win.Copy(pos, tex, tex.Bounds(), draw.Over, nil)
+type Drawer interface {
+	Draw()
 }
 
-func clearWin(bg color.Color) {
+func ClearWin(bg color.Color) {
 	id := f64.Aff3{1, 0, 0,
 		0, 1, 0}
 	win.DrawUniform(id, bg, image.Rect(0, 0, winSize.X, winSize.Y), draw.Over, nil)
 }
 
-func pt(x, y int) image.Point { return image.Point{x, y} }
+func DrawAll(x []Drawer) {
+	for _, x := range x {
+		x.Draw()
+	}
+}
+
+func drawTex(tex screen.Texture, pos image.Point) {
+	win.Copy(pos, tex, tex.Bounds(), draw.Over, nil)
+}

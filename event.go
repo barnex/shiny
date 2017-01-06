@@ -32,7 +32,7 @@ var (
 )
 
 func handleTick() {
-	mazeTick()
+	toplevel.Tick()
 
 	win.Send(paint.Event{})
 
@@ -88,11 +88,15 @@ func handleLifecycle(e lifecycle.Event) {
 }
 
 func handleRepaint() {
-	scene.Draw()
+	toplevel.Draw()
 	win.Publish()
 }
 
 type tick struct{}
+
+type Ticker interface {
+	Tick()
+}
 
 func handleResize(s size.Event) {
 	winSize = image.Point{s.WidthPx, s.HeightPx}
