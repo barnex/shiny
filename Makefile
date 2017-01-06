@@ -1,7 +1,6 @@
 all:
 	goimports -w *.go
-	go build
+	go build -race
 
-run:
-	go build
+run: all
 	./shiny
