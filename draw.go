@@ -19,7 +19,7 @@ func ClearWin(bg color.Color) {
 	win.DrawUniform(id, bg, image.Rect(0, 0, winSize.X, winSize.Y), draw.Over, nil)
 }
 
-func DrawAll(x []Drawer) {
+func DrawAll(x ...Drawer) {
 	for _, x := range x {
 		x.Draw()
 	}

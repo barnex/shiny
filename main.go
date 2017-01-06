@@ -24,8 +24,8 @@ var (
 
 func main() {
 	gldriver.Main(func(s screen.Screen) {
-		width := 1920
-		height := 1080
+		width := 1280
+		height := 960
 		initWindow(s, width, height)
 
 		initialize()

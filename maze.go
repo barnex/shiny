@@ -10,7 +10,6 @@ type Maze struct {
 	creatures []*Creature
 
 	background color.RGBA
-	scene      []Drawer
 	block      Texture
 	maze       [][]int
 }
@@ -37,6 +36,9 @@ func (m *Maze) AddCreature(p ...*Creature) {
 }
 
 func (m *Maze) Draw() {
+
+	ClearWin(m.background)
+
 	for i := range m.maze {
 		for j := range m.maze[i] {
 			if m.maze[i][j] != 0 {
@@ -46,7 +48,9 @@ func (m *Maze) Draw() {
 		}
 	}
 
-	DrawAll(m.scene)
+	for _, c := range m.creatures {
+		c.Draw()
+	}
 }
 
 func (m *Maze) Tick() {
