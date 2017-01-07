@@ -6,41 +6,14 @@ import (
 	"path/filepath"
 
 	"golang.org/x/image/draw"
-
-	"golang.org/x/exp/shiny/screen"
 )
 
-type Texture struct {
-	tex screen.Texture
+func LoadTexture(fname string) XTexture {
+	return XUpload(load(fname, D))
 }
 
-func LoadTexture(fname string) Texture {
-	return Texture{load(fname, D)}
-}
-
-func (t *Texture) DrawAt(r Pt) {
-	drawTex(t.tex, r.Point())
-}
-
-func load(fname string, size int) screen.Texture {
-	buf := buffer(resize(decode(fname), size, size))
-	defer buf.Release()
-	return texture(buf)
-}
-
-func texture(buf screen.Buffer) screen.Texture {
-	bounds := buf.Bounds()
-	tex, err := scr.NewTexture(bounds.Size())
-	check(err)
-	tex.Upload(image.Point{}, buf, bounds)
-	return tex
-}
-
-func buffer(img image.Image) screen.Buffer {
-	buf, err := scr.NewBuffer(img.Bounds().Size())
-	check(err) // TODO
-	draw.Draw(buf.RGBA(), buf.Bounds(), img, image.Point{}, draw.Over)
-	return buf
+func load(fname string, size int) image.Image {
+	return resize(decode(fname), size, size)
 }
 
 func resize(src image.Image, sx, sy int) image.Image {

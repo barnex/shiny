@@ -1,13 +1,13 @@
 package main
 
 type Creature struct {
-	tex         Texture
+	tex         XTexture
 	pos, target Pt
 }
 
 func NewCreature(tex string) *Creature {
 	return &Creature{
-		tex: LoadTexture(tex),
+	//tex: LoadTexture(tex),
 	}
 }
 

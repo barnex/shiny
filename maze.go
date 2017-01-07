@@ -10,7 +10,7 @@ type Maze struct {
 	creatures []*Creature
 
 	background color.RGBA
-	block      Texture
+	block      XTexture
 	maze       [][]int
 }
 
@@ -37,7 +37,7 @@ func (m *Maze) AddCreature(p ...*Creature) {
 
 func (m *Maze) Draw() {
 
-	ClearWin(m.background)
+	XClear(m.background)
 
 	for i := range m.maze {
 		for j := range m.maze[i] {

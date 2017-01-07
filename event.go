@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	"golang.org/x/mobile/event/key"
 	"golang.org/x/mobile/event/lifecycle"
@@ -46,9 +47,10 @@ func handleTick() {
 }
 
 func handleEvent(e interface{}) {
+	log.Printf("%T", e)
 	switch e := e.(type) {
 	default:
-		fmt.Printf("unhandled: %T %#v\n", e, e)
+		//fmt.Printf("unhandled: %T %#v\n", e, e)
 	case key.Event:
 		handleKey(e)
 	case lifecycle.Event:
