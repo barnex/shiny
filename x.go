@@ -3,8 +3,6 @@
 package main
 
 import (
-	"time"
-
 	"golang.org/x/exp/shiny/driver/gldriver"
 	"golang.org/x/exp/shiny/screen"
 )
@@ -18,20 +16,15 @@ var (
 func XInit(width, height int) {
 
 	gldriver.Main(func(s screen.Screen) {
-		initWindow(s, width, height)
+		w, err := s.NewWindow(&screen.NewWindowOptions{width, height})
+		check(err)
+		scr = s
+		win = w
 
 		//initialize()
-		time.Sleep(10 * time.Millisecond)
 
 		for {
 			handleEvent(win.NextEvent())
 		}
 	})
-}
-
-func initWindow(s screen.Screen, width, height int) {
-	w, err := s.NewWindow(&screen.NewWindowOptions{width, height})
-	check(err)
-	scr = s
-	win = w
 }
