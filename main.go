@@ -9,16 +9,12 @@ import (
 )
 
 var (
-	toplevel interface {
-		Ticker
-		Drawer
-	}
+	m Maze
 )
 
 func main() {
 	log.SetFlags(log.Lmicroseconds)
 
-	var m Maze
 	OnRepaint = m.Draw
 
 	XInit(1920, 1080, func() {
@@ -30,7 +26,9 @@ func main() {
 
 func runTicker() {
 	for range time.Tick(200 * time.Millisecond) {
-		win.Send(tick{}) // TODO: do not use win
+		m.Tick()
+		m.Draw()
+		XPublish()
 	}
 }
 

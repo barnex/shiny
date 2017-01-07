@@ -20,7 +20,8 @@ const (
 )
 
 var (
-	keyPressed  [KeyMax]bool
+	input Input
+
 	keyReleased [KeyMax]bool
 	keyMap      = map[key.Code]int{
 		key.CodeDownArrow:  KeyDown,
@@ -30,20 +31,16 @@ var (
 	}
 )
 
-//func handleTick() {
-//	toplevel.Tick()
-//
-//	win.Send(paint.Event{})
-//
-//	// complicated dance to ensure that key appears pressed when tick arrives,
-//	// even if key was only briefly pressed in between ticks
-//	for i, released := range keyReleased {
-//		if released {
-//			keyPressed[i] = false
-//			keyReleased[i] = false
-//		}
-//	}
-//}
+func XInput() Input {
+	ch := make(chan Input)
+	win.Send(ch)
+	log.Println(input)
+	return <-ch
+}
+
+type Input struct {
+	Key [KeyMax]bool
+}
 
 func handleEvent(e interface{}) {
 	log.Printf("%T%#v", e, e)
@@ -58,6 +55,17 @@ func handleEvent(e interface{}) {
 		handleRepaint()
 	case size.Event:
 		handleResize(e)
+	case chan Input:
+		handleInput(e)
+	}
+}
+
+func handleInput(ch chan Input) {
+	ch <- input
+	for i, r := range keyReleased {
+		if r {
+			input.Key[i] = false
+		}
 	}
 }
 
@@ -68,7 +76,7 @@ func handleKey(e key.Event) {
 
 	code := keyMap[e.Code]
 	if pressed {
-		keyPressed[code] = true
+		input.Key[code] = true
 	} else {
 		keyReleased[code] = true
 	}
@@ -82,8 +90,8 @@ func handleLifecycle(e lifecycle.Event) {
 }
 
 func handleRepaint() {
-	OnRepaint()
-	win.Publish()
+	//OnRepaint()
+	//win.Publish()
 }
 
 type tick struct{}
@@ -93,6 +101,8 @@ type Ticker interface {
 }
 
 func handleResize(s size.Event) {
+	mu.Lock()
 	winSize = Pt{s.WidthPx, s.HeightPx}
+	mu.Unlock()
 	win.Send(paint.Event{})
 }

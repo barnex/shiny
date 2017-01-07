@@ -51,17 +51,19 @@ func (m *Maze) Draw() {
 
 func (m *Maze) Tick() {
 
+	input := XInput()
+
 	dir := Pt{0, 0}
-	if keyPressed[KeyDown] {
+	if input.Key[KeyDown] {
 		dir.Y++
 	}
-	if keyPressed[KeyLeft] {
+	if input.Key[KeyLeft] {
 		dir.X--
 	}
-	if keyPressed[KeyRight] {
+	if input.Key[KeyRight] {
 		dir.X++
 	}
-	if keyPressed[KeyUp] {
+	if input.Key[KeyUp] {
 		dir.Y--
 	}
 

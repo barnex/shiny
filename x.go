@@ -6,6 +6,7 @@ import (
 	"image"
 	"image/color"
 	"image/draw"
+	"sync"
 
 	"golang.org/x/exp/shiny/driver/gldriver"
 	"golang.org/x/exp/shiny/screen"
@@ -19,6 +20,7 @@ var (
 var (
 	scr     screen.Screen
 	win     screen.Window
+	mu      sync.Mutex
 	winSize Pt
 )
 
@@ -28,7 +30,6 @@ func XInit(width, height int, init func()) {
 		check(err)
 		scr = s
 		win = w
-
 		init()
 		for {
 			handleEvent(win.NextEvent())
@@ -36,10 +37,16 @@ func XInit(width, height int, init func()) {
 	})
 }
 
+func XPublish() {
+	win.Publish()
+}
+
 func XClear(bg color.RGBA) {
 	id := f64.Aff3{1, 0, 0,
 		0, 1, 0}
+	mu.Lock()
 	win.DrawUniform(id, bg, image.Rect(0, 0, winSize.X, winSize.Y), draw.Over, nil)
+	mu.Unlock()
 }
 
 type XTexture struct {
