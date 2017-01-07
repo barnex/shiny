@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -13,18 +14,23 @@ import (
 )
 
 var (
+	OnRepaint func()
+)
+
+var (
 	scr     screen.Screen
 	win     screen.Window
 	winSize Pt
 )
 
-func XInit(width, height int) {
+func XInit(width, height int, init func()) {
 	gldriver.Main(func(s screen.Screen) {
 		w, err := s.NewWindow(&screen.NewWindowOptions{width, height})
 		check(err)
 		scr = s
 		win = w
 
+		init()
 		for {
 			handleEvent(win.NextEvent())
 		}
@@ -42,11 +48,17 @@ type XTexture struct {
 }
 
 func XUpload(img image.Image) XTexture {
-	return XTexture{texture(buffer(img))}
-	// TODO: release buffer
+	b := toBuffer(img)
+	defer b.Release()
+	return XTexture{toTexture(b)}
 }
 
-func texture(buf screen.Buffer) screen.Texture {
+func (t *XTexture) DrawAt(r Pt) {
+	fmt.Printf("win:%#v t:%#v r:%#v\n", win, t, r)
+	win.Copy(r.Point(), t.tex, t.tex.Bounds(), draw.Over, nil)
+}
+
+func toTexture(buf screen.Buffer) screen.Texture {
 	bounds := buf.Bounds()
 	tex, err := scr.NewTexture(bounds.Size())
 	check(err)
@@ -54,13 +66,9 @@ func texture(buf screen.Buffer) screen.Texture {
 	return tex
 }
 
-func buffer(img image.Image) screen.Buffer {
+func toBuffer(img image.Image) screen.Buffer {
 	buf, err := scr.NewBuffer(img.Bounds().Size())
 	check(err) // TODO
 	draw.Draw(buf.RGBA(), buf.Bounds(), img, image.Point{}, draw.Over)
 	return buf
-}
-
-func (t *XTexture) DrawAt(r Pt) {
-	win.Copy(r.Point(), t.tex, t.tex.Bounds(), draw.Over, nil)
 }

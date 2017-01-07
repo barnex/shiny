@@ -89,7 +89,7 @@ func handleLifecycle(e lifecycle.Event) {
 }
 
 func handleRepaint() {
-	//toplevel.Draw()
+	OnRepaint()
 	win.Publish()
 }
 

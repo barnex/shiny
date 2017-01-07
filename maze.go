@@ -14,9 +14,7 @@ type Maze struct {
 	maze       [][]int
 }
 
-func LoadMaze() *Maze {
-	m := &Maze{}
-
+func (m *Maze) Init() {
 	m.player = NewCreature("stickman").PlaceAt(Pt{1, 1})
 	m.AddCreature(m.player)
 
@@ -27,8 +25,6 @@ func LoadMaze() *Maze {
 	m.background = color.RGBA{R: 220, G: 220, B: 220, A: 255}
 	m.block = LoadTexture("block2")
 	m.maze = maze2
-
-	return m
 }
 
 func (m *Maze) AddCreature(p ...*Creature) {

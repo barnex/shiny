@@ -7,7 +7,7 @@ type Creature struct {
 
 func NewCreature(tex string) *Creature {
 	return &Creature{
-	//tex: LoadTexture(tex),
+		tex: LoadTexture(tex),
 	}
 }
 
