@@ -15,7 +15,7 @@ type Maze struct {
 }
 
 func (m *Maze) Init() {
-	m.player = NewCreature("stickman").PlaceAt(Pt{1, 1})
+	m.player = NewPlayer().PlaceAt(Pt{1, 1})
 	m.AddCreature(m.player)
 
 	keyhole := NewCreature("keyhole").PlaceAt(Pt{4, 5})
@@ -50,36 +50,9 @@ func (m *Maze) Draw() {
 }
 
 func (m *Maze) Tick() {
-
-	input := XInput()
-
-	dir := Pt{0, 0}
-	if input.Key[KeyDown] {
-		dir.Y++
+	for _, c := range m.creatures {
+		c.Tick()
 	}
-	if input.Key[KeyLeft] {
-		dir.X--
-	}
-	if input.Key[KeyRight] {
-		dir.X++
-	}
-	if input.Key[KeyUp] {
-		dir.Y--
-	}
-
-	p2 := m.player.pos.Add(dir)
-	if x := p2.X; x < 0 || x >= m.Size().X {
-		dir.X = 0
-	}
-	if y := p2.Y; y < 0 || y >= m.Size().Y {
-		dir.Y = 0
-	}
-
-	if m.maze[p2.Y][p2.X] != 0 {
-		dir = Pt{}
-	}
-
-	m.player.pos = m.player.pos.Add(dir)
 }
 
 func (m *Maze) Size() Pt {
