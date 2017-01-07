@@ -23,8 +23,10 @@ func (m *Maze) Init() {
 	m.AddCreature(key, keyhole)
 
 	m.background = color.RGBA{R: 220, G: 220, B: 220, A: 255}
-	m.block = LoadTexture("block2")
+	m.block = LoadTexture("block4")
 	m.maze = maze2
+
+	m.AddCreature(NewCreature("pig1").PlaceAt(Pt{16, 12}).WithBrain(BHunter))
 }
 
 func (m *Maze) AddCreature(p ...*Creature) {
