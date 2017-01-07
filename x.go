@@ -3,7 +3,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -48,27 +47,17 @@ type XTexture struct {
 }
 
 func XUpload(img image.Image) XTexture {
-	b := toBuffer(img)
-	defer b.Release()
-	return XTexture{toTexture(b)}
-}
-
-func (t *XTexture) DrawAt(r Pt) {
-	fmt.Printf("win:%#v t:%#v r:%#v\n", win, t, r)
-	win.Copy(r.Point(), t.tex, t.tex.Bounds(), draw.Over, nil)
-}
-
-func toTexture(buf screen.Buffer) screen.Texture {
-	bounds := buf.Bounds()
+	bounds := img.Bounds()
+	buf, err := scr.NewBuffer(bounds.Size())
+	check(err)
+	defer buf.Release()
+	draw.Draw(buf.RGBA(), bounds, img, image.Point{}, draw.Over)
 	tex, err := scr.NewTexture(bounds.Size())
 	check(err)
 	tex.Upload(image.Point{}, buf, bounds)
-	return tex
+	return XTexture{tex}
 }
 
-func toBuffer(img image.Image) screen.Buffer {
-	buf, err := scr.NewBuffer(img.Bounds().Size())
-	check(err) // TODO
-	draw.Draw(buf.RGBA(), buf.Bounds(), img, image.Point{}, draw.Over)
-	return buf
+func (t *XTexture) DrawAt(r Pt) {
+	win.Copy(r.Point(), t.tex, t.tex.Bounds(), draw.Over, nil)
 }

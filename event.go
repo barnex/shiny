@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"golang.org/x/mobile/event/key"
@@ -47,10 +46,8 @@ func handleTick() {
 }
 
 func handleEvent(e interface{}) {
-	log.Printf("%T", e)
+	log.Printf("%T%#v", e, e)
 	switch e := e.(type) {
-	default:
-		//fmt.Printf("unhandled: %T %#v\n", e, e)
 	case key.Event:
 		handleKey(e)
 	case lifecycle.Event:
@@ -69,8 +66,6 @@ func handleEvent(e interface{}) {
 func handleMouse(e mouse.Event) {}
 
 func handleKey(e key.Event) {
-	fmt.Printf("%T %#v\n", e, e)
-
 	pressed := (e.Direction != key.DirRelease) // DirPressed, DirNone both mean pressed (!)
 
 	code := keyMap[e.Code]
