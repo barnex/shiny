@@ -30,20 +30,20 @@ var (
 	}
 )
 
-func handleTick() {
-	toplevel.Tick()
-
-	win.Send(paint.Event{})
-
-	// complicated dance to ensure that key appears pressed when tick arrives,
-	// even if key was only briefly pressed in between ticks
-	for i, released := range keyReleased {
-		if released {
-			keyPressed[i] = false
-			keyReleased[i] = false
-		}
-	}
-}
+//func handleTick() {
+//	toplevel.Tick()
+//
+//	win.Send(paint.Event{})
+//
+//	// complicated dance to ensure that key appears pressed when tick arrives,
+//	// even if key was only briefly pressed in between ticks
+//	for i, released := range keyReleased {
+//		if released {
+//			keyPressed[i] = false
+//			keyReleased[i] = false
+//		}
+//	}
+//}
 
 func handleEvent(e interface{}) {
 	log.Printf("%T%#v", e, e)
@@ -58,8 +58,6 @@ func handleEvent(e interface{}) {
 		handleRepaint()
 	case size.Event:
 		handleResize(e)
-	case tick:
-		handleTick()
 	}
 }
 
@@ -96,4 +94,5 @@ type Ticker interface {
 
 func handleResize(s size.Event) {
 	winSize = Pt{s.WidthPx, s.HeightPx}
+	win.Send(paint.Event{})
 }

@@ -17,15 +17,21 @@ var (
 
 func main() {
 	log.SetFlags(log.Lmicroseconds)
+
 	var m Maze
 	OnRepaint = m.Draw
-	XInit(1280, 960, m.Init)
 
-	go func() {
-		for range time.Tick(200 * time.Millisecond) {
-			win.Send(tick{})
-		}
-	}()
+	XInit(1920, 1080, func() {
+		m.Init()
+		go runTicker()
+	})
+
+}
+
+func runTicker() {
+	for range time.Tick(200 * time.Millisecond) {
+		win.Send(tick{}) // TODO: do not use win
+	}
 }
 
 func check(err error) {
