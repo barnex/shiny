@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"image"
 
 	"golang.org/x/mobile/event/key"
 	"golang.org/x/mobile/event/lifecycle"
@@ -88,7 +87,7 @@ func handleLifecycle(e lifecycle.Event) {
 }
 
 func handleRepaint() {
-	toplevel.Draw()
+	//toplevel.Draw()
 	win.Publish()
 }
 
@@ -99,5 +98,5 @@ type Ticker interface {
 }
 
 func handleResize(s size.Event) {
-	winSize = image.Point{s.WidthPx, s.HeightPx}
+	winSize = Pt{s.WidthPx, s.HeightPx}
 }

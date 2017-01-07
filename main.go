@@ -1,21 +1,14 @@
 package main
 
 import (
-	"image"
 	_ "image/jpeg"
 	_ "image/png"
 	"log"
 	"os"
 	"time"
-
-	"golang.org/x/exp/shiny/driver/gldriver"
-	"golang.org/x/exp/shiny/screen"
 )
 
 var (
-	scr      screen.Screen
-	win      screen.Window
-	winSize  image.Point
 	toplevel interface {
 		Ticker
 		Drawer
@@ -23,24 +16,7 @@ var (
 )
 
 func main() {
-	gldriver.Main(func(s screen.Screen) {
-		width := 1280
-		height := 960
-		initWindow(s, width, height)
-
-		initialize()
-
-		for {
-			handleEvent(win.NextEvent())
-		}
-	})
-}
-
-func initWindow(s screen.Screen, width, height int) {
-	w, err := s.NewWindow(&screen.NewWindowOptions{width, height})
-	check(err)
-	scr = s
-	win = w
+	XInit(1280, 960)
 }
 
 func initialize() {
