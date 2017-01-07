@@ -3,9 +3,14 @@ package main
 import "math/rand"
 
 func BHunter(c *Creature) {
-	x := 1 - rand.Intn(3)
-	y := 1 - rand.Intn(3)
-	c.SetDir(Pt{x, y})
+	if dice(0.5) {
+		c.SetDir(m.player.pos.Sub(c.pos))
+	}
+}
+
+// Return true with chance p.
+func dice(p float64) bool {
+	return rand.Float64() < p
 }
 
 // Player brain: keyboard controls player movements.
