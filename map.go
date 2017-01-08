@@ -5,7 +5,7 @@ import "image/color"
 // Tile size in pixels
 const D = 64
 
-type Maze struct {
+type Map struct {
 	player    *Creature
 	creatures []*Creature
 
@@ -14,7 +14,7 @@ type Maze struct {
 	maze       [][]int
 }
 
-func (m *Maze) Init() {
+func (m *Map) Init() {
 	m.player = NewCreature("stickman").WithBrain(BPlayer).PlaceAt(Pt{1, 1})
 	m.AddCreature(m.player)
 
@@ -29,15 +29,15 @@ func (m *Maze) Init() {
 	m.AddCreature(NewCreature("pig1").PlaceAt(Pt{16, 12}).WithBrain(BHunter))
 }
 
-func (m *Maze) AddCreature(p ...*Creature) {
+func (m *Map) AddCreature(p ...*Creature) {
 	m.creatures = append(m.creatures, p...)
 }
 
-func (m *Maze) At(x, y int) int {
+func (m *Map) At(x, y int) int {
 	return m.maze[y][x] // TODO: clip to in bounds
 }
 
-func (m *Maze) Draw() {
+func (m *Map) Draw() {
 
 	XClear(m.background)
 
@@ -55,13 +55,13 @@ func (m *Maze) Draw() {
 	}
 }
 
-func (m *Maze) Tick() {
+func (m *Map) Tick() {
 	for _, c := range m.creatures {
 		c.Tick()
 	}
 }
 
-func (m *Maze) Size() Pt {
+func (m *Map) Size() Pt {
 	mazeW := len(m.maze[0])
 	mazeH := len(m.maze)
 	return Pt{mazeW, mazeH}
@@ -73,18 +73,18 @@ var (
 	maze2 = [][]int{
 		{X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X},
 		{X, 0, 0, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, X, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, X, X, X, X, X, X, X, 0, X, 0, 0, X, X, X, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, 0, 0, 0, 0, 0, 0, X, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, X, X, 0, X, X, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, X, 0, 0, 0, X, 0, X, 0, 0, 0, X, X, X, X, X, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, X, 0, 0, 0, X, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, X, X, X, X, X, 0, X, 0, X, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, X, X, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, X, X, X, 0, X, X, X, X, 0, 0, 0, 0, 0, X, X, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, 0, X, 0, X, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, 0, X, 0, X, 0, X, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-		{X, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
+		{X, 0, X, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, X, X, 0, X, X, 0, X, 0, 0, 0, 0, X},
+		{X, 0, X, X, X, X, X, X, X, 0, X, 0, 0, X, X, X, X, 0, X, 0, 0, X, 0, 0, X, 0, 0, 0, 0, X},
+		{X, 0, 0, 0, 0, 0, 0, 0, X, 0, X, 0, 0, 0, 0, 0, 0, 0, X, X, 0, X, X, 0, X, 0, 0, 0, 0, X},
+		{X, 0, X, X, 0, X, X, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, X, 0, 0, 0, 0, X},
+		{X, 0, X, 0, 0, 0, X, 0, X, 0, 0, 0, X, X, X, X, X, 0, X, 0, 0, X, X, 0, X, X, 0, 0, 0, X},
+		{X, 0, X, 0, 0, 0, X, 0, 0, 0, X, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
+		{X, 0, X, X, X, X, X, 0, X, 0, X, 0, 0, 0, 0, 0, X, 0, X, 0, 0, X, 0, X, 0, 0, 0, 0, 0, X},
+		{X, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, X, X, X, 0, X, 0, 0, X, 0, X, 0, 0, 0, 0, 0, X},
+		{X, X, X, X, 0, X, X, X, X, 0, 0, 0, 0, 0, X, X, X, 0, X, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, X},
+		{X, 0, 0, X, 0, X, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, X, 0, X, 0, 0, X, 0, X, 0, 0, 0, 0, 0, X},
+		{X, 0, 0, X, 0, X, 0, X, 0, 0, X, 0, 0, 0, 0, 0, X, 0, X, 0, 0, X, 0, X, 0, 0, 0, 0, 0, X},
+		{X, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
 		{X, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
 		{X, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
 		{X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X},

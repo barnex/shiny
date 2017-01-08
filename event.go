@@ -34,7 +34,6 @@ var (
 func XInput() Input {
 	ch := make(chan Input)
 	win.Send(ch)
-	log.Println(input)
 	return <-ch
 }
 
@@ -43,7 +42,7 @@ type Input struct {
 }
 
 func handleEvent(e interface{}) {
-	log.Printf("%T%#v", e, e)
+	//log.Printf("%T%#v", e, e)
 	switch e := e.(type) {
 	case key.Event:
 		handleKey(e)
@@ -72,12 +71,15 @@ func handleInput(ch chan Input) {
 func handleMouse(e mouse.Event) {}
 
 func handleKey(e key.Event) {
-	pressed := (e.Direction != key.DirRelease) // DirPressed, DirNone both mean pressed (!)
 
+	log.Println(e)
 	code := keyMap[e.Code]
-	if pressed {
+
+	// TODO: driver does not seem pass key repeats correctly
+	switch e.Direction {
+	case key.DirPress:
 		input.Key[code] = true
-	} else {
+	case key.DirRelease:
 		keyReleased[code] = true
 	}
 

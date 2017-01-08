@@ -31,6 +31,7 @@ func XInit(width, height int, init func()) {
 		scr = s
 		win = w
 		init()
+		//go runKeySampler()
 		for {
 			handleEvent(win.NextEvent())
 		}

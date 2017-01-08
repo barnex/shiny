@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	m     Maze
+	m     Map
 	ticks int // global time
 )
 
