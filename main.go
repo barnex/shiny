@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	m Maze
+	m     Maze
+	ticks int // global time
 )
 
 func main() {
@@ -27,6 +28,8 @@ func main() {
 func runTicker() {
 	for range time.Tick(200 * time.Millisecond) {
 		m.Tick()
+		ticks++
+
 		m.Draw()
 		XPublish()
 	}

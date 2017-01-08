@@ -3,10 +3,11 @@ package main
 import "math/rand"
 
 func BHunter(c *Creature) {
-	if dice(0.5) {
-		c.SetDir(m.player.pos.Sub(c.pos))
+	c.SetDir(m.player.pos.Sub(c.pos))
+
+	if ticks%3 == 0 {
+		c.MoveToTarget()
 	}
-	c.MoveToTarget()
 }
 
 // Return true with chance p.
