@@ -1,9 +1,10 @@
 package main
 
 type Creature struct {
-	tex         XTexture
-	pos, target Pt // TODO: target -> direction
-	brain       func(*Creature)
+	tex   XTexture
+	pos   Pt              // Position
+	dir   Pt              // Direction of movement
+	brain func(*Creature) // Decides where to move, etc.
 }
 
 func NewCreature(tex string) *Creature {
@@ -18,7 +19,7 @@ func (c *Creature) WithBrain(b func(*Creature)) *Creature {
 }
 
 func (c *Creature) SetDir(d Pt) {
-	c.target = c.pos.Add(d)
+	c.dir = d
 }
 
 func (c *Creature) Tick() {
@@ -29,7 +30,7 @@ func (c *Creature) Tick() {
 
 func (c *Creature) MoveToTarget() {
 	p := c.pos
-	dir := c.target.Sub(p).Clip1()
+	dir := c.dir.Clip1()
 	p2 := c.pos.Add(dir)
 
 	// Don't run out-of-bounds
@@ -61,7 +62,6 @@ func (c *Creature) Draw() {
 
 func (c *Creature) PlaceAt(r Pt) *Creature {
 	c.pos = r
-	c.target = r
 	return c
 }
 
