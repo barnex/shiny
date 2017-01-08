@@ -1,10 +1,8 @@
 package main
 
-import "fmt"
-
 type Creature struct {
 	tex         XTexture
-	pos, target Pt
+	pos, target Pt // TODO: target -> direction
 	brain       func(*Creature)
 }
 
@@ -27,13 +25,14 @@ func (c *Creature) Tick() {
 	if c.brain != nil {
 		c.brain(c)
 	}
+}
 
-	// move to target
-
-	dir := c.target.Sub(c.pos).Clip1()
+func (c *Creature) MoveToTarget() {
+	p := c.pos
+	dir := c.target.Sub(p).Clip1()
 	p2 := c.pos.Add(dir)
-	fmt.Println(c.pos, c.target, dir, p2)
 
+	// Don't run out-of-bounds
 	if x := p2.X; x < 0 || x >= m.Size().X {
 		dir.X = 0
 	}
@@ -41,8 +40,17 @@ func (c *Creature) Tick() {
 		dir.Y = 0
 	}
 
-	if m.maze[p2.Y][p2.X] != 0 {
-		dir = Pt{}
+	// Don't run through walls
+	if m.At(p.X+dir.X, p.Y) != 0 {
+		dir.X = 0
+	}
+	if m.At(p.X, p.Y+dir.Y) != 0 {
+		dir.Y = 0
+	}
+
+	// Don't move diagonally
+	if dir.X != 0 && dir.Y != 0 {
+		dir.Y = 0 // TODO: round-robin x,y
 	}
 	c.pos = c.pos.Add(dir)
 }
@@ -59,8 +67,4 @@ func (c *Creature) PlaceAt(r Pt) *Creature {
 
 func screenPos(r Pt) Pt {
 	return r.Mul(D)
-}
-
-func NewPlayer() *Creature {
-	return NewCreature("stickman").WithBrain(BPlayer)
 }

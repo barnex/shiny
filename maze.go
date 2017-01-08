@@ -15,7 +15,7 @@ type Maze struct {
 }
 
 func (m *Maze) Init() {
-	m.player = NewPlayer().PlaceAt(Pt{1, 1})
+	m.player = NewCreature("stickman").WithBrain(BPlayer).PlaceAt(Pt{1, 1})
 	m.AddCreature(m.player)
 
 	keyhole := NewCreature("keyhole").PlaceAt(Pt{4, 5})
@@ -31,6 +31,10 @@ func (m *Maze) Init() {
 
 func (m *Maze) AddCreature(p ...*Creature) {
 	m.creatures = append(m.creatures, p...)
+}
+
+func (m *Maze) At(x, y int) int {
+	return m.maze[y][x] // TODO: clip to in bounds
 }
 
 func (m *Maze) Draw() {

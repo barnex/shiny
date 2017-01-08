@@ -6,6 +6,7 @@ func BHunter(c *Creature) {
 	if dice(0.5) {
 		c.SetDir(m.player.pos.Sub(c.pos))
 	}
+	c.MoveToTarget()
 }
 
 // Return true with chance p.
@@ -32,4 +33,5 @@ func BPlayer(c *Creature) {
 	}
 
 	c.SetDir(dir)
+	c.MoveToTarget()
 }
