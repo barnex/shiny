@@ -5,7 +5,7 @@ import "math/rand"
 func BHunter(c *Creature) {
 	c.SetDir(m.player.pos.Sub(c.pos))
 
-	if ticks%3 == 0 {
+	if ticks%8 == 0 {
 		c.MoveToTarget()
 	}
 }

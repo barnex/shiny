@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"golang.org/x/mobile/event/key"
 	"golang.org/x/mobile/event/lifecycle"
@@ -20,9 +21,8 @@ const (
 )
 
 var (
-	input Input
-
-	keyReleased [KeyMax]bool
+	keyPressed  [KeyMax]bool
+	keyReleased [KeyMax]time.Time
 	keyMap      = map[key.Code]int{
 		key.CodeDownArrow:  KeyDown,
 		key.CodeLeftArrow:  KeyLeft,
@@ -60,12 +60,14 @@ func handleEvent(e interface{}) {
 }
 
 func handleInput(ch chan Input) {
-	ch <- input
-	for i, r := range keyReleased {
-		if r {
-			input.Key[i] = false
+	now := time.Now()
+	var in Input
+	for i := range in.Key {
+		if keyPressed[i] || (now.Sub(keyReleased[i])) < 10*time.Millisecond {
+			in.Key[i] = true
 		}
 	}
+	ch <- in
 }
 
 func handleMouse(e mouse.Event) {}
@@ -78,9 +80,10 @@ func handleKey(e key.Event) {
 	// TODO: driver does not seem pass key repeats correctly
 	switch e.Direction {
 	case key.DirPress:
-		input.Key[code] = true
+		keyPressed[code] = true
 	case key.DirRelease:
-		keyReleased[code] = true
+		keyPressed[code] = false
+		keyReleased[code] = time.Now()
 	}
 
 }
