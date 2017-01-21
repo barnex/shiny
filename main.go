@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	m     Map
+	m     *Map
 	ticks int // global time
 )
 
@@ -19,7 +19,7 @@ func main() {
 	OnRepaint = m.Draw
 
 	XInit(1920, 1080, func() {
-		m.Init()
+		m = Map1()
 		go runTicker()
 	})
 
