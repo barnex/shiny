@@ -13,13 +13,18 @@ var (
 	ticks int // global time
 )
 
+var maps = []func() *Map{
+	Map1,
+	Map2,
+}
+
 func main() {
 	log.SetFlags(log.Lmicroseconds)
 
 	OnRepaint = m.Draw
 
 	XInit(1920, 1080, func() {
-		m = Map1()
+		m = maps[0]()
 		go runTicker()
 	})
 

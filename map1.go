@@ -16,7 +16,7 @@ func Map1() *Map {
 
 	m.AddCreature(NewCreature("pig1").PlaceAt(Pt{16, 12}).WithBrain(BHunter))
 
-	m.maze = maze1
+	m.LoadImage("maze3")
 
 	return m
 }

@@ -14,6 +14,31 @@ type Map struct {
 	maze       [][]int
 }
 
+var (
+	CodeBrick = rgba(color.Black)
+)
+
+func (m *Map) LoadImage(fname string) {
+	img := decode(fname)
+	w := img.Bounds().Max.X
+	h := img.Bounds().Max.Y
+	maze := make([][]int, h)
+	for y := range maze {
+		maze[y] = make([]int, w)
+		for x := range maze[y] {
+			if rgba(img.At(x, y)) == CodeBrick {
+				maze[y][x] = 1
+			}
+		}
+	}
+	m.maze = maze
+}
+
+func rgba(c color.Color) color.RGBA {
+	r, g, b, a := c.RGBA()
+	return color.RGBA{uint8(r / 255), uint8(g / 255), uint8(b / 255), uint8(a / 255)}
+}
+
 func (m *Map) AddCreature(p ...*Creature) {
 	m.creatures = append(m.creatures, p...)
 }
