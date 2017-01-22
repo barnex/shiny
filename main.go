@@ -28,9 +28,16 @@ func mainLoop() {
 	for range time.Tick(jiffie) {
 		keyPressed = x11.KeyPressed()
 		m.Tick()
-		m.Draw() // TODO: drop frames
-		x11.Publish()
+		lazyDraw()
 		ticks++
+	}
+}
+
+func lazyDraw() {
+	// TODO: drop frames if we cannot follow
+	if ticks%4 == 0 {
+		m.Draw()
+		x11.Publish()
 	}
 }
 
