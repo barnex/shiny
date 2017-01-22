@@ -1,15 +1,18 @@
 package main
 
 type Creature struct {
-	tex   Texture
-	pos   Pt              // Position
-	dir   Pt              // Direction of movement
-	brain func(*Creature) // Decides where to move, etc.
+	tex      Texture
+	pos      Pt              // Position
+	dir      Pt              // Direction of movement
+	lastMove int             // when moved last (for speed limit)
+	slowness int             // how many jiffies to make a move
+	brain    func(*Creature) // Decides where to move, etc.
 }
 
 func NewCreature(tex string) *Creature {
 	return &Creature{
-		tex: LoadTexture(tex),
+		tex:      LoadTexture(tex),
+		slowness: 5,
 	}
 }
 
@@ -26,9 +29,14 @@ func (c *Creature) Tick() {
 	if c.brain != nil {
 		c.brain(c)
 	}
+	c.MoveToTarget()
 }
 
 func (c *Creature) MoveToTarget() {
+	if ticks-c.lastMove < c.slowness {
+		return
+	}
+
 	p := c.pos
 	dir := c.dir.Clip1()
 	p2 := c.pos.Add(dir)
@@ -53,7 +61,10 @@ func (c *Creature) MoveToTarget() {
 	if dir.X != 0 && dir.Y != 0 {
 		dir.Y = 0 // TODO: round-robin x,y
 	}
-	c.pos = c.pos.Add(dir)
+	if dir != (Pt{0, 0}) {
+		c.pos = c.pos.Add(dir)
+		c.lastMove = ticks
+	}
 }
 
 func (c *Creature) Draw() {
