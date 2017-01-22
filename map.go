@@ -1,6 +1,10 @@
 package main
 
-import "image/color"
+import (
+	"image/color"
+
+	"github.com/barnex/shiny/x11"
+)
 
 // Tile size in pixels
 const D = 64
@@ -10,7 +14,7 @@ type Map struct {
 	creatures []*Creature
 
 	background color.RGBA
-	block      XTexture
+	block      Texture
 	maze       [][]int
 }
 
@@ -49,7 +53,7 @@ func (m *Map) At(x, y int) int {
 
 func (m *Map) Draw() {
 
-	XClear(m.background)
+	x11.Clear(m.background)
 
 	for i := range m.maze {
 		for j := range m.maze[i] {

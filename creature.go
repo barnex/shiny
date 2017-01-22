@@ -1,7 +1,7 @@
 package main
 
 type Creature struct {
-	tex   XTexture
+	tex   Texture
 	pos   Pt              // Position
 	dir   Pt              // Direction of movement
 	brain func(*Creature) // Decides where to move, etc.

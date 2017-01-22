@@ -6,6 +6,8 @@ import (
 	"log"
 	"os"
 	"time"
+
+	"github.com/barnex/shiny/x11"
 )
 
 type Ticker interface {
@@ -27,10 +29,15 @@ func main() {
 
 	m = maps[0]()
 
-	XInit(1920, 1080, func() {
-		go runTicker()
+	x11.Init(1920, 1080, func() {
+		mainLoop()
 	})
 
+}
+
+func mainLoop() {
+	go runTicker()
+	///...
 }
 
 func runTicker() {
@@ -39,19 +46,13 @@ func runTicker() {
 		ticks++
 
 		m.Draw()
-		XPublish()
+		x11.Publish()
 	}
 }
 
 func check(err error) {
 	if err != nil {
 		log.Fatal(err)
-	}
-}
-
-func cleanup() {
-	if win != nil {
-		win.Release()
 	}
 }
 

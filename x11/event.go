@@ -69,7 +69,14 @@ func handleMouse(e mouse.Event) {
 
 func handleLifecycle(e lifecycle.Event) {
 	if e.To == lifecycle.StageDead {
+		cleanup()
 		os.Exit(0)
+	}
+}
+
+func cleanup() {
+	if win != nil {
+		win.Release()
 	}
 }
 

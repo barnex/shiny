@@ -5,11 +5,20 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/barnex/shiny/x11"
 	"golang.org/x/image/draw"
 )
 
-func LoadTexture(fname string) XTexture {
-	return XUpload(load(fname, D))
+type Texture struct {
+	xt x11.Texture
+}
+
+func (t Texture) DrawAt(r Pt) {
+	t.xt.DrawAt(r.X, r.Y)
+}
+
+func LoadTexture(fname string) Texture {
+	return Texture{x11.Upload(load(fname, D))}
 }
 
 func load(fname string, size int) image.Image {
