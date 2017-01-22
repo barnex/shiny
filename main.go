@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+type Ticker interface {
+	Tick()
+}
+
 var (
 	m     *Map
 	ticks int // global time

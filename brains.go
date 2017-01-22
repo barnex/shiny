@@ -17,22 +17,22 @@ func dice(p float64) bool {
 
 // Player brain: keyboard controls player movements.
 func BPlayer(c *Creature) {
-	input := XInput()
+	//input := XInput()
 
-	dir := Pt{0, 0}
-	if input.Key[KeyDown] {
-		dir.Y++
-	}
-	if input.Key[KeyLeft] {
-		dir.X--
-	}
-	if input.Key[KeyRight] {
-		dir.X++
-	}
-	if input.Key[KeyUp] {
-		dir.Y--
-	}
+	//dir := Pt{0, 0}
+	//if input.Key[KeyDown] {
+	//	dir.Y++
+	//}
+	//if input.Key[KeyLeft] {
+	//	dir.X--
+	//}
+	//if input.Key[KeyRight] {
+	//	dir.X++
+	//}
+	//if input.Key[KeyUp] {
+	//	dir.Y--
+	//}
 
-	c.SetDir(dir)
-	c.MoveToTarget()
+	//c.SetDir(dir)
+	//c.MoveToTarget()
 }

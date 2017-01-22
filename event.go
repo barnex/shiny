@@ -20,29 +20,19 @@ const (
 	KeyMax
 )
 
+var keyMap = map[key.Code]int{
+	key.CodeDownArrow:  KeyDown,
+	key.CodeLeftArrow:  KeyLeft,
+	key.CodeRightArrow: KeyRight,
+	key.CodeUpArrow:    KeyUp,
+}
+
 var (
 	keyPressed  [KeyMax]bool
 	keyReleased [KeyMax]time.Time
-	keyMap      = map[key.Code]int{
-		key.CodeDownArrow:  KeyDown,
-		key.CodeLeftArrow:  KeyLeft,
-		key.CodeRightArrow: KeyRight,
-		key.CodeUpArrow:    KeyUp,
-	}
 )
 
-func XInput() Input {
-	ch := make(chan Input)
-	win.Send(ch)
-	return <-ch
-}
-
-type Input struct {
-	Key [KeyMax]bool
-}
-
 func handleEvent(e interface{}) {
-	//log.Printf("%T%#v", e, e)
 	switch e := e.(type) {
 	case key.Event:
 		handleKey(e)
@@ -54,30 +44,14 @@ func handleEvent(e interface{}) {
 		handleRepaint()
 	case size.Event:
 		handleResize(e)
-	case chan Input:
-		handleInput(e)
 	}
 }
-
-func handleInput(ch chan Input) {
-	now := time.Now()
-	var in Input
-	for i := range in.Key {
-		if keyPressed[i] || (now.Sub(keyReleased[i])) < 10*time.Millisecond {
-			in.Key[i] = true
-		}
-	}
-	ch <- in
-}
-
-func handleMouse(e mouse.Event) {}
 
 func handleKey(e key.Event) {
 
-	log.Println(e)
 	code := keyMap[e.Code]
 
-	// TODO: driver does not seem pass key repeats correctly
+	// driver does not pass key repeats correctly
 	switch e.Direction {
 	case key.DirPress:
 		keyPressed[code] = true
@@ -88,6 +62,10 @@ func handleKey(e key.Event) {
 
 }
 
+func handleMouse(e mouse.Event) {
+
+}
+
 func handleLifecycle(e lifecycle.Event) {
 	if e.To == lifecycle.StageDead {
 		exit()
@@ -95,14 +73,8 @@ func handleLifecycle(e lifecycle.Event) {
 }
 
 func handleRepaint() {
+	log.Println("TODO: handle repaint?")
 	//OnRepaint()
-	//win.Publish()
-}
-
-type tick struct{}
-
-type Ticker interface {
-	Tick()
 }
 
 func handleResize(s size.Event) {
