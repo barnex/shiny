@@ -4,25 +4,16 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 	"log"
-	"os"
 	"time"
 
 	"github.com/barnex/shiny/x11"
 )
 
-type Ticker interface {
-	Tick()
-}
-
 var (
-	m     *Map
-	ticks int // global time
+	m          *Map
+	ticks      int // global time
+	keyPressed [x11.KeyMax]bool
 )
-
-var maps = []func() *Map{
-	Map1,
-	Map2,
-}
 
 func main() {
 	log.SetFlags(log.Lmicroseconds)
@@ -31,26 +22,19 @@ func main() {
 
 func mainLoop() {
 	m = maps[0]()
-	go runTicker()
-	///...
-}
 
-func runTicker() {
 	for range time.Tick(200 * time.Millisecond) {
+		keyPressed = x11.KeyPressed()
 		m.Tick()
-		ticks++
-
 		m.Draw()
 		x11.Publish()
+		ticks++
 	}
 }
 
 func check(err error) {
 	if err != nil {
 		log.Fatal(err)
+		ticks++
 	}
-}
-
-func exit() {
-	os.Exit(0)
 }

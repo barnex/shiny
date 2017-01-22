@@ -3,7 +3,7 @@ package x11
 import (
 	"log"
 	"os"
-	"time"
+	"sync"
 
 	"golang.org/x/mobile/event/key"
 	"golang.org/x/mobile/event/lifecycle"
@@ -13,13 +13,19 @@ import (
 )
 
 const (
-	KeyInv = iota
+	KeyUnknown = iota
 	KeyLeft
 	KeyRight
 	KeyDown
 	KeyUp
 	KeyMax
 )
+
+func KeyPressed() [KeyMax]bool {
+	pressed.Lock()
+	defer pressed.Unlock()
+	return pressed.key
+}
 
 var keyMap = map[key.Code]int{
 	key.CodeDownArrow:  KeyDown,
@@ -28,10 +34,10 @@ var keyMap = map[key.Code]int{
 	key.CodeUpArrow:    KeyUp,
 }
 
-var (
-	keyPressed  [KeyMax]bool
-	keyReleased [KeyMax]time.Time
-)
+var pressed struct {
+	sync.Mutex
+	key [KeyMax]bool
+}
 
 func handleEvent(e interface{}) {
 	switch e := e.(type) {
@@ -49,18 +55,18 @@ func handleEvent(e interface{}) {
 }
 
 func handleKey(e key.Event) {
-
 	code := keyMap[e.Code]
+
+	pressed.Lock()
+	defer pressed.Unlock()
 
 	// driver does not pass key repeats correctly
 	switch e.Direction {
 	case key.DirPress:
-		keyPressed[code] = true
+		pressed.key[code] = true
 	case key.DirRelease:
-		keyPressed[code] = false
-		keyReleased[code] = time.Now()
+		pressed.key[code] = false
 	}
-
 }
 
 func handleMouse(e mouse.Event) {
