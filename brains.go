@@ -1,6 +1,10 @@
 package main
 
-import "math/rand"
+import (
+	"math/rand"
+
+	"github.com/barnex/shiny/x11"
+)
 
 func BHunter(c *Creature) {
 	c.SetDir(m.player.pos.Sub(c.pos))
@@ -17,22 +21,21 @@ func dice(p float64) bool {
 
 // Player brain: keyboard controls player movements.
 func BPlayer(c *Creature) {
-	//input := XInput()
 
-	//dir := Pt{0, 0}
-	//if input.Key[KeyDown] {
-	//	dir.Y++
-	//}
-	//if input.Key[KeyLeft] {
-	//	dir.X--
-	//}
-	//if input.Key[KeyRight] {
-	//	dir.X++
-	//}
-	//if input.Key[KeyUp] {
-	//	dir.Y--
-	//}
+	dir := Pt{0, 0}
+	if keyPressed[x11.KeyDown] {
+		dir.Y++
+	}
+	if keyPressed[x11.KeyLeft] {
+		dir.X--
+	}
+	if keyPressed[x11.KeyRight] {
+		dir.X++
+	}
+	if keyPressed[x11.KeyUp] {
+		dir.Y--
+	}
 
-	//c.SetDir(dir)
-	//c.MoveToTarget()
+	c.SetDir(dir)
+	c.MoveToTarget()
 }

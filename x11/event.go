@@ -1,6 +1,7 @@
 package x11
 
 import (
+	"image"
 	"log"
 	"os"
 	"sync"
@@ -92,8 +93,8 @@ func handleRepaint() {
 }
 
 func handleResize(s size.Event) {
-	//mu.Lock()
-	//winSize = Pt{s.WidthPx, s.HeightPx}
-	//mu.Unlock()
-	//win.Send(paint.Event{})
+	mu.Lock()
+	winSize = image.Point{s.WidthPx, s.HeightPx}
+	mu.Unlock()
+	win.Send(paint.Event{})
 }
