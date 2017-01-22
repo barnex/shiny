@@ -26,16 +26,11 @@ var maps = []func() *Map{
 
 func main() {
 	log.SetFlags(log.Lmicroseconds)
-
-	m = maps[0]()
-
-	x11.Init(1920, 1080, func() {
-		mainLoop()
-	})
-
+	x11.Main(1920, 1080, mainLoop)
 }
 
 func mainLoop() {
+	m = maps[0]()
 	go runTicker()
 	///...
 }

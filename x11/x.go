@@ -20,7 +20,9 @@ var (
 	winSize image.Point
 )
 
-func Init(width, height int, mainLoop func()) {
+// Open a window with given size, and execute mainLoop.
+// Never returns.
+func Main(width, height int, mainLoop func()) {
 	gldriver.Main(func(s screen.Screen) {
 		w, err := s.NewWindow(&screen.NewWindowOptions{width, height})
 		check(err)
