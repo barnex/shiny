@@ -1,11 +1,11 @@
-// Abstraction layer from the windowing/rendering context
-
-package main
+// Abstraction layer from the windowing/rendering context.
+package x11
 
 import (
 	"image"
 	"image/color"
 	"image/draw"
+	"log"
 	"sync"
 
 	"golang.org/x/exp/shiny/driver/gldriver"
@@ -14,35 +14,31 @@ import (
 )
 
 var (
-	OnRepaint func()
-)
-
-var (
 	scr     screen.Screen
 	win     screen.Window
 	mu      sync.Mutex
-	winSize Pt
+	winSize image.Point
 )
 
-func XInit(width, height int, init func()) {
+func Init(width, height int, mainLoop func()) {
 	gldriver.Main(func(s screen.Screen) {
 		w, err := s.NewWindow(&screen.NewWindowOptions{width, height})
 		check(err)
 		scr = s
 		win = w
-		init()
-		//go runKeySampler()
+		go mainLoop()
 		for {
 			handleEvent(win.NextEvent())
 		}
 	})
+	return
 }
 
-func XPublish() {
+func Publish() {
 	win.Publish()
 }
 
-func XClear(bg color.RGBA) {
+func Clear(bg color.RGBA) {
 	id := f64.Aff3{1, 0, 0,
 		0, 1, 0}
 	mu.Lock()
@@ -50,11 +46,11 @@ func XClear(bg color.RGBA) {
 	mu.Unlock()
 }
 
-type XTexture struct {
+type Texture struct {
 	tex screen.Texture
 }
 
-func XUpload(img image.Image) XTexture {
+func Upload(img image.Image) Texture {
 	bounds := img.Bounds()
 	buf, err := scr.NewBuffer(bounds.Size())
 	check(err)
@@ -63,9 +59,15 @@ func XUpload(img image.Image) XTexture {
 	tex, err := scr.NewTexture(bounds.Size())
 	check(err)
 	tex.Upload(image.Point{}, buf, bounds)
-	return XTexture{tex}
+	return Texture{tex}
 }
 
-func (t *XTexture) DrawAt(r Pt) {
-	win.Copy(r.Point(), t.tex, t.tex.Bounds(), draw.Over, nil)
+func (t *Texture) DrawAt(x, y int) {
+	win.Copy(image.Point{x, y}, t.tex, t.tex.Bounds(), draw.Over, nil)
+}
+
+func check(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
 }

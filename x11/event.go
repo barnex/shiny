@@ -1,7 +1,8 @@
-package main
+package x11
 
 import (
 	"log"
+	"os"
 	"time"
 
 	"golang.org/x/mobile/event/key"
@@ -68,7 +69,7 @@ func handleMouse(e mouse.Event) {
 
 func handleLifecycle(e lifecycle.Event) {
 	if e.To == lifecycle.StageDead {
-		exit()
+		os.Exit(0)
 	}
 }
 
@@ -78,8 +79,8 @@ func handleRepaint() {
 }
 
 func handleResize(s size.Event) {
-	mu.Lock()
-	winSize = Pt{s.WidthPx, s.HeightPx}
-	mu.Unlock()
-	win.Send(paint.Event{})
+	//mu.Lock()
+	//winSize = Pt{s.WidthPx, s.HeightPx}
+	//mu.Unlock()
+	//win.Send(paint.Event{})
 }

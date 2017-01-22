@@ -25,10 +25,9 @@ var maps = []func() *Map{
 func main() {
 	log.SetFlags(log.Lmicroseconds)
 
-	OnRepaint = m.Draw
+	m = maps[0]()
 
 	XInit(1920, 1080, func() {
-		m = maps[0]()
 		go runTicker()
 	})
 
