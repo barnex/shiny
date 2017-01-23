@@ -2,7 +2,6 @@ package x11
 
 import (
 	"image"
-	"log"
 	"os"
 	"sync"
 
@@ -59,7 +58,6 @@ func handleKey(e key.Event) {
 	code := keyMap[e.Code]
 
 	pressed.Lock()
-	defer pressed.Unlock()
 
 	// driver does not pass key repeats correctly
 	switch e.Direction {
@@ -68,6 +66,8 @@ func handleKey(e key.Event) {
 	case key.DirRelease:
 		pressed.key[code] = false
 	}
+
+	pressed.Unlock()
 }
 
 func handleMouse(e mouse.Event) {
@@ -88,8 +88,7 @@ func cleanup() {
 }
 
 func handleRepaint() {
-	log.Println("TODO: handle repaint?")
-	//OnRepaint()
+
 }
 
 func handleResize(s size.Event) {

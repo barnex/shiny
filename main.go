@@ -35,7 +35,7 @@ func mainLoop() {
 
 func lazyDraw() {
 	// TODO: drop frames if we cannot follow
-	if ticks%4 == 0 {
+	if ticks%2 == 0 {
 		m.Draw()
 		x11.Publish()
 	}
