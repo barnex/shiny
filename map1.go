@@ -4,41 +4,21 @@ import "image/color"
 
 func Map1() *Map {
 	m := new(Map)
-	m.player = NewCreature("stickman").WithBrain(BPlayer).PlaceAt(Pt{1, 1})
-	m.AddCreature(m.player)
-
-	keyhole := NewCreature("keyhole").PlaceAt(Pt{4, 5})
-	key := NewCreature("key").PlaceAt(Pt{15, 12})
-	m.AddCreature(key, keyhole)
 
 	m.background = color.RGBA{R: 220, G: 220, B: 220, A: 255}
+
+	maze, items := MapFromImage(decode("maze_fl_1"))
 	m.block = LoadTexture("block4")
+	m.maze = maze
 
-	pig := NewCreature("pig1").PlaceAt(Pt{16, 12}).WithBrain(BHunter)
+	m.player = m.NewCreature("stickman").WithBrain(BPlayer).PlaceAt(items[BLUE][0])
+
+	_ = m.NewCreature("keyhole").PlaceAt(items[YELLOW][0])
+	_ = m.NewCreature("keyhole").PlaceAt(items[YELLOW][1])
+	_ = m.NewCreature("key").PlaceAt(items[YELLOW][2])
+
+	pig := m.NewCreature("pig1").WithBrain(BHunter).PlaceAt(items[GREEN][0])
 	pig.slowness = 10
-	m.AddCreature(pig)
-
-	m.LoadImage("maze_fl_1")
 
 	return m
-}
-
-var maze1 = [][]int{
-	{X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X},
-	{X, 0, 0, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, 0, X, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, X, X, 0, X, X, 0, X, 0, 0, 0, 0, X},
-	{X, 0, X, X, X, X, X, X, X, 0, X, 0, 0, X, X, X, X, 0, X, 0, 0, X, 0, 0, X, 0, 0, 0, 0, X},
-	{X, 0, 0, 0, 0, 0, 0, 0, X, 0, X, 0, 0, 0, 0, 0, 0, 0, X, X, 0, X, X, 0, X, 0, 0, 0, 0, X},
-	{X, 0, X, X, 0, X, X, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, X, 0, 0, 0, 0, X},
-	{X, 0, X, 0, 0, 0, X, 0, X, 0, 0, 0, X, X, X, X, X, 0, X, 0, 0, X, X, 0, X, X, 0, 0, 0, X},
-	{X, 0, X, 0, 0, 0, X, 0, 0, 0, X, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, 0, X, X, X, X, X, 0, X, 0, X, 0, 0, 0, 0, 0, X, 0, X, 0, 0, X, 0, X, 0, 0, 0, 0, 0, X},
-	{X, 0, 0, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, X, X, X, 0, X, 0, 0, X, 0, X, 0, 0, 0, 0, 0, X},
-	{X, X, X, X, 0, X, X, X, X, 0, 0, 0, 0, 0, X, X, X, 0, X, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, X},
-	{X, 0, 0, X, 0, X, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, X, 0, X, 0, 0, X, 0, X, 0, 0, 0, 0, 0, X},
-	{X, 0, 0, X, 0, X, 0, X, 0, 0, X, 0, 0, 0, 0, 0, X, 0, X, 0, 0, X, 0, X, 0, 0, 0, 0, 0, X},
-	{X, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, 0, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, 0, 0, 0, 0, 0, 0, X, 0, 0, X, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, X},
-	{X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X, X},
 }

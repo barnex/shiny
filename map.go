@@ -1,7 +1,9 @@
 package main
 
 import (
+	"image"
 	"image/color"
+	"log"
 
 	"github.com/barnex/shiny/x11"
 )
@@ -19,32 +21,51 @@ type Map struct {
 }
 
 var (
-	CodeBrick = rgba(color.Black)
+	BLACK  = color.RGBA{0, 0, 0, 255}
+	RED    = color.RGBA{255, 0, 0, 255}
+	GREEN  = color.RGBA{0, 255, 0, 255}
+	BLUE   = color.RGBA{0, 0, 255, 255}
+	YELLOW = color.RGBA{255, 255, 0, 255}
+	WHITE  = color.RGBA{255, 255, 255, 255}
 )
 
-func (m *Map) LoadImage(fname string) {
-	img := decode(fname)
+func MapFromImage(img image.Image) (maze [][]int, items map[color.RGBA][]Pt) {
 	w := img.Bounds().Max.X
 	h := img.Bounds().Max.Y
-	maze := make([][]int, h)
+	maze = make([][]int, h)
+	items = make(map[color.RGBA][]Pt)
 	for y := range maze {
 		maze[y] = make([]int, w)
 		for x := range maze[y] {
-			if rgba(img.At(x, y)) == CodeBrick {
+			col := rgba(img.At(x, y))
+			switch col {
+			case WHITE:
+				maze[y][x] = 0
+			case BLACK:
 				maze[y][x] = 1
+			default:
+				log.Println("item", col, "@", x, y)
+				items[col] = append(items[col], Pt{x, y})
 			}
 		}
 	}
-	m.maze = maze
+	log.Println(rgba(BLACK))
+	return maze, items
 }
 
 func rgba(c color.Color) color.RGBA {
 	r, g, b, a := c.RGBA()
-	return color.RGBA{uint8(r / 255), uint8(g / 255), uint8(b / 255), uint8(a / 255)}
+	return color.RGBA{uint8(r), uint8(g), uint8(b), uint8(a)}
 }
 
 func (m *Map) AddCreature(p ...*Creature) {
 	m.creatures = append(m.creatures, p...)
+}
+
+func (m *Map) NewCreature(img string) *Creature {
+	c := NewCreature(img)
+	m.AddCreature(c)
+	return c
 }
 
 func (m *Map) At(x, y int) int {
