@@ -12,7 +12,7 @@ type Creature struct {
 func NewCreature(tex string) *Creature {
 	return &Creature{
 		tex:      LoadTexture(tex),
-		slowness: 5,
+		slowness: 10,
 	}
 }
 
