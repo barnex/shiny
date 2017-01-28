@@ -50,10 +50,10 @@ func (c *Creature) MoveToTarget() {
 	}
 
 	// Don't run through walls
-	if !Walkable(m.At(p.X+dir.X, p.Y)) {
+	if !Walkable(m.At(p.Add(Pt{dir.X, 0}))) {
 		dir.X = 0
 	}
-	if !Walkable(m.At(p.X, p.Y+dir.Y)) {
+	if !Walkable(m.At(p.Add(Pt{0, dir.Y}))) {
 		dir.Y = 0
 	}
 

@@ -22,6 +22,14 @@ func NewMap() *Map {
 	return &Map{background: WHITE}
 }
 
+func (m *Map) At(r Pt) Obj {
+	return m.maze[r.Y][r.X] // TODO: clip to in bounds
+}
+
+func (m *Map) Set(r Pt, obj Obj) {
+	m.maze[r.Y][r.X] = obj
+}
+
 func (m *Map) AddCreature(p ...*Creature) {
 	m.creatures = append(m.creatures, p...)
 }
@@ -30,14 +38,6 @@ func (m *Map) NewCreature(img string) *Creature {
 	c := NewCreature(img)
 	m.AddCreature(c)
 	return c
-}
-
-func (m *Map) At(x, y int) Obj {
-	return m.maze[y][x] // TODO: clip to in bounds
-}
-
-func (m *Map) Set(pos Pt, obj Obj) {
-	m.maze[pos.Y][pos.X] = obj
 }
 
 func (m *Map) Draw() {
