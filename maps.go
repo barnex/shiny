@@ -1,6 +1,8 @@
 package main
 
 var maps = []func() *Map{
-	Map1,
-	Map2,
+	Maze(0),
+	Maze(1),
+	Maze(2),
+	Maze(3),
 }

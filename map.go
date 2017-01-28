@@ -29,6 +29,10 @@ var (
 	WHITE  = color.RGBA{255, 255, 255, 255}
 )
 
+func NewMap() *Map {
+	return &Map{background: WHITE}
+}
+
 func MapFromImage(img image.Image) (maze [][]int, items map[color.RGBA][]Pt) {
 	w := img.Bounds().Max.X
 	h := img.Bounds().Max.Y
