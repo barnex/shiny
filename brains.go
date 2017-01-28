@@ -4,3 +4,12 @@ package main
 func BHunter(c *Creature) {
 	c.SetDir(player.pos.Sub(c.pos))
 }
+
+func Walker(dir Pt) func(*Creature) {
+	return func(c *Creature) {
+		c.SetDir(dir)
+		if !Walkable(m.At(c.pos.Add(dir))) {
+			dir = dir.Mul(-1)
+		}
+	}
+}
