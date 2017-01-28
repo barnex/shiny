@@ -17,6 +17,6 @@ func LoadMaze(fname string) *Map {
 	m.maze = maze
 
 	m.player = m.NewCreature("stickman").WithBrain(BPlayer).PlaceAt(items[BLUE][0])
-	//m.Set(items[BLUE][1], Exit{})
+	m.Set(items[BLUE][1], Exit{})
 	return m
 }
