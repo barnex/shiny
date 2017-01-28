@@ -10,8 +10,10 @@ import (
 )
 
 var (
-	nextMap    int
-	m          *Map
+	player  *Creature
+	m       *Map
+	nextMap int
+
 	ticks      int // global time
 	keyPressed [x11.KeyMax]bool
 )
@@ -24,12 +26,13 @@ func main() {
 }
 
 func mainLoop() {
+	player = NewCreature("gopher").WithBrain(BPlayer)
 	LoadNextMap()
 
 	for range time.Tick(jiffie) {
 		keyPressed = x11.KeyPressed()
 		m.Tick()
-		if (m.At(m.player.pos) == Exit{}) {
+		if (m.At(player.pos) == Exit{}) {
 			reDraw()
 			time.Sleep(time.Second)
 			LoadNextMap()

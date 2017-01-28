@@ -10,9 +10,7 @@ import (
 const D = 64
 
 type Map struct {
-	player    *Creature
-	creatures []*Creature
-
+	creatures  []*Creature
 	background color.RGBA
 	block      Texture
 	maze       [][]Obj
@@ -56,9 +54,12 @@ func (m *Map) Draw() {
 	for _, c := range m.creatures {
 		c.Draw()
 	}
+
+	player.Draw()
 }
 
 func (m *Map) Tick() {
+	player.Tick()
 	for _, c := range m.creatures {
 		c.Tick()
 	}
@@ -69,5 +70,3 @@ func (m *Map) Size() Pt {
 	mazeH := len(m.maze)
 	return Pt{mazeW, mazeH}
 }
-
-const X = 1

@@ -8,10 +8,9 @@ func Map1() *Map {
 	m.background = color.RGBA{R: 220, G: 220, B: 220, A: 255}
 
 	maze, items := MapFromImage(decode("maze_fl_1"))
-	m.block = LoadTexture("block4")
 	m.maze = maze
 
-	m.player = m.NewCreature("stickman").WithBrain(BPlayer).PlaceAt(items[BLUE][0])
+	player.PlaceAt(items[BLUE][0])
 
 	_ = m.NewCreature("keyhole").PlaceAt(items[YELLOW][0])
 	_ = m.NewCreature("keyhole").PlaceAt(items[YELLOW][1])
