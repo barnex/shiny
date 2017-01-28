@@ -5,4 +5,6 @@ var maps = []func() *Map{
 	Maze(1),
 	Maze(2),
 	Maze(3),
+	Maze(4),
+	Maze(5),
 }
