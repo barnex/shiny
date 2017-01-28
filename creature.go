@@ -50,10 +50,10 @@ func (c *Creature) MoveToTarget() {
 	}
 
 	// Don't run through walls
-	if m.At(p.X+dir.X, p.Y) != 0 {
+	if m.At(p.X+dir.X, p.Y) != nil {
 		dir.X = 0
 	}
-	if m.At(p.X, p.Y+dir.Y) != 0 {
+	if m.At(p.X, p.Y+dir.Y) != nil {
 		dir.Y = 0
 	}
 

@@ -17,7 +17,7 @@ type Map struct {
 
 	background color.RGBA
 	block      Texture
-	maze       [][]int
+	maze       [][]Obj
 }
 
 var (
@@ -33,20 +33,20 @@ func NewMap() *Map {
 	return &Map{background: WHITE}
 }
 
-func MapFromImage(img image.Image) (maze [][]int, items map[color.RGBA][]Pt) {
+func MapFromImage(img image.Image) (maze [][]Obj, items map[color.RGBA][]Pt) {
 	w := img.Bounds().Max.X
 	h := img.Bounds().Max.Y
-	maze = make([][]int, h)
+	maze = make([][]Obj, h)
 	items = make(map[color.RGBA][]Pt)
 	for y := range maze {
-		maze[y] = make([]int, w)
+		maze[y] = make([]Obj, w)
 		for x := range maze[y] {
 			col := rgba(img.At(x, y))
 			switch col {
 			case WHITE:
-				maze[y][x] = 0
+				maze[y][x] = nil
 			case BLACK:
-				maze[y][x] = 1
+				maze[y][x] = Brick{}
 			default:
 				log.Println("item", col, "@", x, y)
 				items[col] = append(items[col], Pt{x, y})
@@ -72,8 +72,12 @@ func (m *Map) NewCreature(img string) *Creature {
 	return c
 }
 
-func (m *Map) At(x, y int) int {
+func (m *Map) At(x, y int) Obj {
 	return m.maze[y][x] // TODO: clip to in bounds
+}
+
+func (m *Map) Set(pos Pt, obj Obj) {
+	m.maze[pos.Y][pos.X] = obj
 }
 
 func (m *Map) Draw() {
@@ -82,9 +86,9 @@ func (m *Map) Draw() {
 
 	for i := range m.maze {
 		for j := range m.maze[i] {
-			if m.maze[i][j] != 0 {
+			if obj := m.maze[i][j]; obj != nil {
 				pos := Pt{j * D, i * D}
-				m.block.DrawAt(pos)
+				obj.DrawAt(pos)
 			}
 		}
 	}

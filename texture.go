@@ -9,6 +9,22 @@ import (
 	"golang.org/x/image/draw"
 )
 
+var texCache = make(map[texKey]Texture)
+
+type texKey struct {
+	fname string
+	size  int
+}
+
+func Tex(fname string) Texture {
+	key := texKey{fname, D}
+	if tex, ok := texCache[key]; ok {
+		return tex
+	}
+	texCache[key] = LoadTexture(fname)
+	return texCache[key]
+}
+
 type Texture struct {
 	xt x11.Texture
 }
