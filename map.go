@@ -12,7 +12,6 @@ const D = 64
 type Map struct {
 	creatures  []*Creature
 	background color.RGBA
-	block      Texture
 	maze       [][]Obj
 }
 

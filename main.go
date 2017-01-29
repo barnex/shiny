@@ -23,6 +23,16 @@ var (
 	keyPressed [x11.KeyMax]bool
 )
 
+var maps = []func() *Map{
+	Maze(0),
+	Maze(1),
+	Maze(2),
+	Maze(3),
+	Maze(4),
+	Maze(5),
+	PigsMap(1),
+}
+
 const jiffie = time.Second / 60
 
 func main() {
