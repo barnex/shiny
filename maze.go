@@ -2,14 +2,14 @@ package main
 
 import "fmt"
 
-func Maze(i int) func() *Map {
-	return func() *Map {
+func Maze(i int) func() *Level {
+	return func() *Level {
 		fname := fmt.Sprint("map/maze", i)
 		return LoadMaze(fname)
 	}
 }
 
-func LoadMaze(fname string) *Map {
+func LoadMaze(fname string) *Level {
 	m := NewMap()
 
 	maze, items := MapFromImage(decode(fname))

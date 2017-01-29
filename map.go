@@ -9,35 +9,35 @@ import (
 // Tile size in pixels
 const D = 64
 
-type Map struct {
+type Level struct {
 	creatures  []*Creature
 	background color.RGBA
 	maze       [][]Obj
 }
 
-func NewMap() *Map {
-	return &Map{background: WHITE}
+func NewMap() *Level {
+	return &Level{background: WHITE}
 }
 
-func (m *Map) At(r Pt) Obj {
+func (m *Level) At(r Pt) Obj {
 	return m.maze[r.Y][r.X] // TODO: clip to in bounds
 }
 
-func (m *Map) Set(r Pt, obj Obj) {
+func (m *Level) Set(r Pt, obj Obj) {
 	m.maze[r.Y][r.X] = obj
 }
 
-func (m *Map) AddCreature(p ...*Creature) {
+func (m *Level) AddCreature(p ...*Creature) {
 	m.creatures = append(m.creatures, p...)
 }
 
-func (m *Map) NewCreature(img string) *Creature {
+func (m *Level) NewCreature(img string) *Creature {
 	c := NewCreature(img)
 	m.AddCreature(c)
 	return c
 }
 
-func (m *Map) Draw() {
+func (m *Level) Draw() {
 
 	x11.Clear(m.background)
 
@@ -57,14 +57,14 @@ func (m *Map) Draw() {
 	player.Draw()
 }
 
-func (m *Map) Tick() {
+func (m *Level) Tick() {
 	player.Tick()
 	for _, c := range m.creatures {
 		c.Tick()
 	}
 }
 
-func (m *Map) Size() Pt {
+func (m *Level) Size() Pt {
 	mazeW := len(m.maze[0])
 	mazeH := len(m.maze)
 	return Pt{mazeW, mazeH}

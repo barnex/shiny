@@ -6,4 +6,4 @@ func (Exit) DrawAt(r Pt) {
 	Tex("exit").DrawAt(r)
 }
 
-func (Exit) Walkable() bool { return true }
+func (Exit) IsWalkable() bool { return true }

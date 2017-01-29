@@ -2,8 +2,8 @@ package main
 
 import "image/color"
 
-func Map1() *Map {
-	m := new(Map)
+func Map1() *Level {
+	m := new(Level)
 
 	m.background = color.RGBA{R: 220, G: 220, B: 220, A: 255}
 

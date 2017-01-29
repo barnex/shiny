@@ -7,6 +7,7 @@ type Creature struct {
 	lastMove int             // when moved last (for speed limit)
 	slowness int             // how many jiffies to make a move
 	brain    func(*Creature) // Decides where to move, etc.
+	deadly   bool
 }
 
 func NewCreature(tex string) *Creature {
@@ -50,10 +51,10 @@ func (c *Creature) MoveToTarget() {
 	}
 
 	// Don't run through walls
-	if !Walkable(m.At(p.Add(Pt{dir.X, 0}))) {
+	if !IsWalkable(m.At(p.Add(Pt{dir.X, 0}))) {
 		dir.X = 0
 	}
-	if !Walkable(m.At(p.Add(Pt{0, dir.Y}))) {
+	if !IsWalkable(m.At(p.Add(Pt{0, dir.Y}))) {
 		dir.Y = 0
 	}
 
@@ -67,8 +68,16 @@ func (c *Creature) MoveToTarget() {
 	}
 }
 
+func (c *Creature) IsDeadly() bool {
+	return c.deadly
+}
+
 func (c *Creature) Draw() {
-	c.tex.DrawAt(screenPos(c.pos))
+	c.DrawAt(screenPos(c.pos))
+}
+
+func (c *Creature) DrawAt(r Pt) {
+	c.tex.DrawAt(r)
 }
 
 func (c *Creature) PlaceAt(r Pt) *Creature {

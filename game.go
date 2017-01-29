@@ -1,3 +1,6 @@
+// Global game state machine.
+// Loads levels, ends game, etc.
+
 package main
 
 import (
@@ -6,7 +9,7 @@ import (
 	"github.com/barnex/shiny/x11"
 )
 
-var maps = []func() *Map{
+var levels = []func() *Level{
 	Maze(0),
 	Maze(1),
 	Maze(2),
@@ -17,33 +20,59 @@ var maps = []func() *Map{
 }
 
 var (
-	player  *Creature
-	m       *Map
-	nextMap int
-	ticks   int // global time
+	player    *Creature // player avatar
+	m         *Level    // current level
+	currLevel int       // index of next level
+	ticks     int       // global time
 )
 
 func gameLoop() {
 	player = NewCreature("gopher").WithBrain(BPlayer)
-	LoadNextMap()
+	loadCurrLevel()
 
 	for range time.Tick(jiffie) {
 		keyPressed = x11.KeyPressed()
 		m.Tick()
-		if (m.At(player.pos) == Exit{}) {
-			reDraw()
-			time.Sleep(time.Second)
-			LoadNextMap()
-		}
+		checkDead()
+		checkExit()
 		lazyDraw()
 		ticks++
 	}
 }
 
-func LoadNextMap() {
-	m = maps[nextMap]()
-	nextMap++
-	if nextMap >= len(maps) {
-		nextMap = 0
+func checkDead() {
+	if IsDeadly(m.At(player.pos)) {
+		die()
 	}
+	for _, c := range m.creatures {
+		if c.pos == player.pos && IsDeadly(c) {
+			die()
+		}
+	}
+}
+
+func die() {
+	reDraw()
+	time.Sleep(time.Second)
+	loadCurrLevel()
+}
+
+func checkExit() {
+	if (m.At(player.pos) == Exit{}) {
+		reDraw()
+		time.Sleep(time.Second)
+		loadNextLevel()
+	}
+}
+
+func loadCurrLevel() {
+	m = levels[currLevel]()
+}
+
+func loadNextLevel() {
+	currLevel++
+	if currLevel >= len(levels) {
+		currLevel = 0
+	}
+	loadCurrLevel()
 }

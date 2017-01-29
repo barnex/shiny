@@ -8,7 +8,7 @@ func BHunter(c *Creature) {
 func Walker(dir Pt) func(*Creature) {
 	return func(c *Creature) {
 		c.SetDir(dir)
-		if !Walkable(m.At(c.pos.Add(dir))) {
+		if !IsWalkable(m.At(c.pos.Add(dir))) {
 			dir = dir.Mul(-1)
 		}
 	}

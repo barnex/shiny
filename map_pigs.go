@@ -2,14 +2,14 @@ package main
 
 import "fmt"
 
-func PigsMap(i int) func() *Map {
-	return func() *Map {
+func PigsMap(i int) func() *Level {
+	return func() *Level {
 		fname := fmt.Sprint("map/pigs", i)
 		return LoadMaze(fname)
 	}
 }
 
-func LoadPigsMap(fname string) *Map {
+func LoadPigsMap(fname string) *Level {
 	m := NewMap()
 
 	maze, items := MapFromImage(decode(fname))

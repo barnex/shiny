@@ -23,9 +23,8 @@ const jiffie = time.Second / 60
 func main() {
 	log.SetFlags(log.Lmicroseconds)
 	flag.Parse()
-
-	nextMap = *flagLevel
-	x11.Main(1920, 1080, gameLoop)
+	currLevel = *flagLevel
+	x11.Main(1920, 1080, gameLoop) // see game.go
 }
 
 func lazyDraw() {

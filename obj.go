@@ -4,14 +4,26 @@ type Obj interface {
 	DrawAt(r Pt)
 }
 
-func Walkable(o Obj) bool {
+func IsWalkable(o Obj) bool {
 	if o == nil {
 		return true
 	}
 	if w, ok := o.(interface {
-		Walkable() bool
+		IsWalkable() bool
 	}); ok {
-		return w.Walkable()
+		return w.IsWalkable()
+	}
+	return false
+}
+
+func IsDeadly(o Obj) bool {
+	if o == nil {
+		return false
+	}
+	if d, ok := o.(interface {
+		IsDeadly() bool
+	}); ok {
+		return d.IsDeadly()
 	}
 	return false
 }
