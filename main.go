@@ -15,23 +15,8 @@ var (
 )
 
 var (
-	player  *Creature
-	m       *Map
-	nextMap int
-
-	ticks      int // global time
 	keyPressed [x11.KeyMax]bool
 )
-
-var maps = []func() *Map{
-	Maze(0),
-	Maze(1),
-	Maze(2),
-	Maze(3),
-	Maze(4),
-	Maze(5),
-	PigsMap(1),
-}
 
 const jiffie = time.Second / 60
 
@@ -40,32 +25,7 @@ func main() {
 	flag.Parse()
 
 	nextMap = *flagLevel
-	x11.Main(1920, 1080, mainLoop)
-}
-
-func mainLoop() {
-	player = NewCreature("gopher").WithBrain(BPlayer)
-	LoadNextMap()
-
-	for range time.Tick(jiffie) {
-		keyPressed = x11.KeyPressed()
-		m.Tick()
-		if (m.At(player.pos) == Exit{}) {
-			reDraw()
-			time.Sleep(time.Second)
-			LoadNextMap()
-		}
-		lazyDraw()
-		ticks++
-	}
-}
-
-func LoadNextMap() {
-	m = maps[nextMap]()
-	nextMap++
-	if nextMap >= len(maps) {
-		nextMap = 0
-	}
+	x11.Main(1920, 1080, gameLoop)
 }
 
 func lazyDraw() {
