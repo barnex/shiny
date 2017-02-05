@@ -70,6 +70,6 @@ func (t *Texture) DrawAt(x, y int) {
 
 func check(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Panic(err)
 	}
 }

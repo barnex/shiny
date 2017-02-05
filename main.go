@@ -41,7 +41,6 @@ func reDraw() {
 
 func check(err error) {
 	if err != nil {
-		log.Fatal(err)
-		ticks++
+		log.Panic(err)
 	}
 }

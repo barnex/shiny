@@ -16,7 +16,9 @@ var levels = []func() *Level{
 	Maze(3),
 	Maze(4),
 	Maze(5),
+	KeysMap1,
 	PigsMap(1),
+	PigsMap(2),
 }
 
 var (
