@@ -37,6 +37,7 @@ func gameLoop() {
 		m.Tick()
 		checkDead()
 		checkExit()
+		checkBump()
 		lazyDraw()
 		ticks++
 	}
@@ -64,6 +65,12 @@ func checkExit() {
 		reDraw()
 		time.Sleep(time.Second)
 		loadNextLevel()
+	}
+}
+
+func checkBump() {
+	if b, ok := m.At(player.pos).(Bumper); ok {
+		b.Bump()
 	}
 }
 
