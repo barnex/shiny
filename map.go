@@ -20,8 +20,13 @@ func NewMap() *Level {
 }
 
 func (m *Level) At(r Pt) Obj {
+	if r.Y < 0 || r.Y >= len(m.maze) || r.X < 0 || r.X >= len(m.maze[0]) {
+		return outerBrick
+	}
 	return m.maze[r.Y][r.X] // TODO: clip to in bounds
 }
+
+var outerBrick = Brick{}
 
 func (m *Level) Set(r Pt, obj Obj) {
 	m.maze[r.Y][r.X] = obj

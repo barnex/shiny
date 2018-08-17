@@ -19,6 +19,7 @@ var levels = []func() *Level{
 	KeysMap1,
 	PigsMap(1),
 	MapFl2,
+	MapFlora2,
 	//PigsMap(2),
 }
 

@@ -7,13 +7,14 @@ import (
 )
 
 var (
-	BLACK  = color.RGBA{0, 0, 0, 255}
-	RED    = color.RGBA{255, 0, 0, 255}
-	GREEN  = color.RGBA{0, 255, 0, 255}
-	BLUE   = color.RGBA{0, 0, 255, 255}
-	YELLOW = color.RGBA{255, 255, 0, 255}
-	WHITE  = color.RGBA{255, 255, 255, 255}
-	GREY   = color.RGBA{128, 128, 128, 255}
+	BLACK   = color.RGBA{0, 0, 0, 255}
+	RED     = color.RGBA{255, 0, 0, 255}
+	GREEN   = color.RGBA{0, 255, 0, 255}
+	BLUE    = color.RGBA{0, 0, 255, 255}
+	YELLOW  = color.RGBA{255, 255, 0, 255}
+	WHITE   = color.RGBA{255, 255, 255, 255}
+	GREY    = color.RGBA{128, 128, 128, 255}
+	MAGENTA = color.RGBA{255, 0, 255, 255}
 )
 
 func MapFromImage(img image.Image) (maze [][]Obj, items map[color.RGBA][]Pt) {
