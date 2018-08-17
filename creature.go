@@ -78,8 +78,8 @@ func (c *Creature) IsDeadly() bool {
 
 func (c *Creature) Draw() {
 	pos := screenPos(c.pos)
-	dt := ticks - c.lastMove
-	pos = pos.Add(c.actualDir.Mul((D * dt) / c.slowness))
+	//dt := ticks - c.lastMove
+	//pos = pos.Add(c.actualDir.Mul((D * dt) / c.slowness))
 	c.DrawAt(pos)
 }
 
