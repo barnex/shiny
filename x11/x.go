@@ -24,7 +24,7 @@ var (
 // Never returns.
 func Main(width, height int, mainLoop func()) {
 	gldriver.Main(func(s screen.Screen) {
-		w, err := s.NewWindow(&screen.NewWindowOptions{width, height})
+		w, err := s.NewWindow(&screen.NewWindowOptions{Width: width, Height: height})
 		check(err)
 		scr = s
 		win = w
