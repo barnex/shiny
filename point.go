@@ -6,6 +6,11 @@ type Pt struct {
 	X, Y int
 }
 
+var (
+	Ex = Pt{1, 0}
+	Ey = Pt{0, 1}
+)
+
 func (p Pt) Add(q Pt) Pt {
 	return Pt{p.X + q.X, p.Y + q.Y}
 }
