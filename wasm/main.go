@@ -1,4 +1,4 @@
-package main
+package wasm
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/barnex/wasm/dom"
 )
 
-func main() {
+func Main() {
 	fmt.Println("WebAssembly running:", time.Now())
 
 	document := js.Global().Get("document")
@@ -46,11 +46,4 @@ func main() {
 }
 
 func loadImgSync(url string) dom.Img {
-	img := dom.GetDocument().CreateImg()
-	var wg sync.WaitGroup
-	wg.Add(1)
-	img.SetOnload(func() { wg.Done() })
-	img.SetSrc(url)
-	wg.Wait()
-	return img
 }
