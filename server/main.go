@@ -17,7 +17,7 @@ func main() {
 	fs := http.FileServer(http.Dir(*dir))
 	log.Fatal(http.ListenAndServe(*listen,
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			log.Println(r)
+			log.Println(r.URL.Path)
 			fs.ServeHTTP(w, r)
 		})))
 }

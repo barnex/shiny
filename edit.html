@@ -8,7 +8,30 @@ license that can be found in the LICENSE file.
 
 <head>
 	<meta charset="utf-8">
-	<title>Go wasm</title>
+	<title>Edit</title>
+
+	<style>
+	.flex-container {
+		display: flex;
+	}
+	.palette {
+		border: 1px solid #999999;
+		margin: 2px;
+		overflow-y: scroll;
+	}
+	.border {
+		border: 1px solid #999999;
+		margin: 2px;
+	}
+	.selected {
+		border: 3px solid #0000FF;
+	}
+	.unselected {
+		border: 3px solid #FFFFFF;
+	}
+	
+	</style>
+
 </head>
 
 <body>
@@ -23,7 +46,7 @@ license that can be found in the LICENSE file.
 
 		const go = new Go();
 		let mod, inst;
-		WebAssembly.instantiateStreaming(fetch("lib.wasm"), go.importObject).then(async (result) => {
+		WebAssembly.instantiateStreaming(fetch("edit.wasm"), go.importObject).then(async (result) => {
 			mod = result.module;
 			inst = result.instance;
 			await go.run(inst);
@@ -31,7 +54,15 @@ license that can be found in the LICENSE file.
 
 	</script>
 
-	<canvas id="canvas" width="800" height="600" style="border:1px solid #999999;">
+	<div class="flex-container">
+
+	<div id="palette" class="palette" width=128 height=128>
+	</div>
+
+	<canvas id="canvas" width="800" height="600" class="border">
 	</canvas>
+
+	</div>
+
 
 </html>

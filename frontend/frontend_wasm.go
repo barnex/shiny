@@ -1,22 +1,10 @@
-package main
+package frontend
 
 import (
 	"fmt"
 	"sync"
 	"syscall/js"
-
-	"github.com/barnex/shiny/game"
 )
-
-func main() {
-	fmt.Println("WebAssembly running")
-	ui := &UI{}
-	game.Main(ui)
-}
-
-type UI struct{}
-
-var _ game.UI = UI{}
 
 var (
 	document = js.Global().Get("document")
@@ -24,7 +12,7 @@ var (
 	ctx      = canvas.Call("getContext", "2d")
 )
 
-func (ui UI) LoadImg(src string) game.Img {
+func LoadImg(src string) Img {
 	var wg sync.WaitGroup
 	wg.Add(1)
 
@@ -32,12 +20,20 @@ func (ui UI) LoadImg(src string) game.Img {
 	img.Set("onload", js.NewCallback(func([]js.Value) {
 		wg.Done()
 	}))
+	img.Set("onerror", js.NewCallback(func(arg []js.Value) {
+		fmt.Println("LoadImg", src, "error:", arg[0])
+		wg.Done()
+	}))
 	img.Set("src", "asset/"+src)
 
 	wg.Wait()
-	return img
+	return Img{img}
 }
 
-func (ui UI) Draw(img game.Img, x, y int) {
-	ctx.Call("drawImage", img.(js.Value), x, y)
+func Draw(img Img, x, y int) {
+	ctx.Call("drawImage", img.Value, x, y)
+}
+
+type Img struct {
+	js.Value
 }
