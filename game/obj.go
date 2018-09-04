@@ -1,8 +1,12 @@
 package game
 
 type Obj interface {
-	DrawAt(r Pt)
+	Img() string
 }
+
+type Tile struct{}
+
+func (t Tile) Img() string { return "tile" }
 
 //func IsWalkable(o Obj) bool {
 //	if o == nil {

@@ -24,7 +24,7 @@ func LoadImg(src string) Img {
 		fmt.Println("LoadImg", src, "error:", arg[0])
 		wg.Done()
 	}))
-	img.Set("src", "asset/"+src)
+	img.Set("src", "asset/"+src+".png")
 
 	wg.Wait()
 	return Img{img}

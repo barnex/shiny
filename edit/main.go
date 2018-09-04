@@ -17,8 +17,21 @@ var (
 func main() {
 	fmt.Println("WebAssembly running")
 
-	paletteAdd("brick.png")
-	paletteAdd("pig2.png")
+	img := frontend.LoadImg("gopher")
+
+	canvas.Call("addEventListener", "mousedown", js.NewCallback(func(arg []js.Value) {
+		ev := arg[0]
+		rect := canvas.Call("getBoundingClientRect")
+		x := ev.Get("clientX").Int() - rect.Get("left").Int()
+		y := ev.Get("clientY").Int() - rect.Get("top").Int()
+		fmt.Println(ev.Get("button").Int())
+		frontend.Draw(img, x, y)
+	}))
+
+	paletteAdd("gopher")
+	paletteAdd("exit")
+	paletteAdd("tile")
+	paletteAdd("brick")
 
 	<-(make(chan int))
 }
