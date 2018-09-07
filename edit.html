@@ -11,27 +11,7 @@ license that can be found in the LICENSE file.
 	<title>Edit</title>
 
 	<style>
-	.flex-container {
-		display: flex;
-	}
-	.palette {
-		border: 1px solid #999999;
-		margin: 2px;
-		overflow-y: scroll;
-	}
-	.border {
-		border: 1px solid #999999;
-		margin: 2px;
-	}
-	.selected {
-		border: 3px solid #0000FF;
-	}
-	.unselected {
-		border: 3px solid #FFFFFF;
-	}
-	
 	</style>
-
 </head>
 
 <body>
@@ -43,7 +23,6 @@ license that can be found in the LICENSE file.
 				return await WebAssembly.instantiate(source, importObject);
 			};
 		}
-
 		const go = new Go();
 		let mod, inst;
 		WebAssembly.instantiateStreaming(fetch("edit.wasm"), go.importObject).then(async (result) => {
@@ -51,15 +30,9 @@ license that can be found in the LICENSE file.
 			inst = result.instance;
 			await go.run(inst);
 		});
-
 	</script>
 
-	<div class="flex-container">
-
-	<div id="palette" class="palette" width=200 >
-	</div>
-
-	<canvas id="canvas" width="800" height="600" class="border">
+	<canvas id="canvas" width=1024 height=768 style="border: solid grey 1px;">
 	</canvas>
 
 	</div>
