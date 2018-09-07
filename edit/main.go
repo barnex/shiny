@@ -18,6 +18,7 @@ var (
 		"lockr", "locky", "lockg", "lockb",
 		"keyr", "keyy", "keyg", "keyb",
 		"arrowl", "arrowu", "arrowr", "arrowd",
+		"water", "pig",
 	}
 	paletteImg      []frontend.Img
 	paletteSel      int
@@ -69,7 +70,9 @@ func bordClick(i, j int) {
 
 func paletteClick(i, j int) {
 	k := paletteW*j + i
-	paletteSel = k
+	if k < len(paletteImg) {
+		paletteSel = k
+	}
 	redraw()
 }
 
