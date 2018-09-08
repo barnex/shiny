@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"syscall/js"
 
@@ -14,11 +15,12 @@ var (
 
 	paletteW   = 4
 	paletteSrc = []string{
-		"tile2", "brick", "gopher", "exit",
-		"lockr", "locky", "lockg", "lockb",
+		"tile2", "brick2", "gopher", "exit",
+		"lock", "locky", "lockg", "lockb",
 		"keyr", "keyy", "keyg", "keyb",
 		"arrowl", "arrowu", "arrowr", "arrowd",
-		"water", "pig",
+		"water", "crate", "button", "dottedline",
+		"pig",
 	}
 	paletteImg      []frontend.Img
 	paletteSel      int
@@ -26,9 +28,10 @@ var (
 
 	splitW = 10
 
-	w, h = 16, 10
-	D    = 64
-	bord = makeBord(w, h)
+	w, h           = 24, 16
+	D              = 64
+	bordList, bord = makeBord(w, h)
+	mouseDown      = false
 )
 
 func main() {
@@ -64,8 +67,23 @@ func canvasClick(arg []js.Value) {
 func bordClick(i, j int) {
 	if i < w && j < h {
 		bord[j][i] = paletteSel
+		uploadLevel()
 	}
 	redraw()
+}
+
+var dummyImg = document.Call("createElement", "img")
+
+func uploadLevel() {
+	dummyImg.Set("src", serializeBord())
+}
+
+func serializeBord() string {
+	data := make([]byte, len(bordList))
+	for i, v := range bordList {
+		data[i] = byte(v)
+	}
+	return base64.StdEncoding.EncodeToString(data)
 }
 
 func paletteClick(i, j int) {
@@ -109,11 +127,11 @@ func drawPalette() {
 	}
 }
 
-func makeBord(w, h int) [][]int {
+func makeBord(w, h int) ([]int, [][]int) {
 	list := make([]int, w*h)
 	bord := make([][]int, h)
 	for i := range bord {
 		bord[i] = list[i*w : (i+1)*w]
 	}
-	return bord
+	return list, bord
 }
