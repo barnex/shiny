@@ -1,8 +1,8 @@
 package main
 
 import (
-	"encoding/base64"
 	"fmt"
+	"log"
 	"syscall/js"
 
 	ui "github.com/barnex/shiny/frontend"
@@ -18,10 +18,10 @@ var (
 
 	splitW = 10
 
-	w, h           = 24, 16
-	D              = game.D
-	bordList, bord = makeBord(w, h)
-	mouseDown      = false
+	w, h      = 24, 16
+	D         = game.D
+	level     = game.LevelData{Blocks: makeBord(w, h)}
+	mouseDown = false
 )
 
 func main() {
@@ -48,7 +48,7 @@ func onMouseDown(x, y int) {
 
 func bordClick(i, j int) {
 	if i < w && j < h {
-		bord[j][i] = paletteSel
+		level.Blocks[j][i] = paletteSel
 		uploadLevel()
 	}
 	redraw()
@@ -57,15 +57,14 @@ func bordClick(i, j int) {
 var dummyImg = document.Call("createElement", "img")
 
 func uploadLevel() {
-	dummyImg.Set("src", serializeBord())
-}
-
-func serializeBord() string {
-	data := make([]byte, len(bordList))
-	for i, v := range bordList {
-		data[i] = byte(v)
+	data := game.Encode(&level)
+	l, err := game.Decode(data)
+	if err != nil {
+		log.Fatal(err)
 	}
-	return base64.StdEncoding.EncodeToString(data)
+	level = l
+	redraw()
+	dummyImg.Set("src", data)
 }
 
 func paletteClick(i, j int) {
@@ -82,8 +81,8 @@ func redraw() {
 }
 
 func drawBord() {
-	for j := range bord {
-		for i, tile := range bord[j] {
+	for j := range level.Blocks {
+		for i, tile := range level.Blocks[j] {
 			x := (paletteW+i)*D + splitW
 			y := j * D
 			ui.Draw(tileImg(), x, y)
@@ -113,11 +112,11 @@ func drawPalette() {
 	}
 }
 
-func makeBord(w, h int) ([]int, [][]int) {
+func makeBord(w, h int) [][]int {
 	list := make([]int, w*h)
 	bord := make([][]int, h)
 	for i := range bord {
 		bord[i] = list[i*w : (i+1)*w]
 	}
-	return list, bord
+	return bord
 }

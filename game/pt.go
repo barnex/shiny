@@ -1,6 +1,6 @@
 package game
 
-// Pt is a 2D point or vector.
+// A Pt is a 2D point or vector.
 type Pt struct {
 	X, Y int
 }
@@ -8,6 +8,11 @@ type Pt struct {
 var (
 	Ex = Pt{1, 0}
 	Ey = Pt{0, 1}
+
+	Right = Pt{1, 0}
+	Up    = Pt{0, 1}
+	Left  = Pt{-1, 0}
+	Down  = Pt{0, -1}
 )
 
 func (p Pt) Add(q Pt) Pt {
