@@ -12,6 +12,15 @@ var (
 	ctx      = canvas.Call("getContext", "2d")
 )
 
+func OnMouseDown(f func(x, y int)) {
+	canvas.Call("addEventListener", "mousedown", js.NewCallback(func(arg []js.Value) {
+		rect := canvas.Call("getBoundingClientRect")
+		x := arg[0].Get("clientX").Int() - rect.Get("left").Int()
+		y := arg[0].Get("clientY").Int() - rect.Get("top").Int()
+		f(x, y)
+	}))
+}
+
 func LoadImg(src string) Img {
 	var wg sync.WaitGroup
 	wg.Add(1)
@@ -24,7 +33,7 @@ func LoadImg(src string) Img {
 		fmt.Println("LoadImg", src, "error:", arg[0])
 		wg.Done()
 	}))
-	img.Set("src", "asset/"+src+".png")
+	img.Set("src", src)
 
 	wg.Wait()
 	return Img{img}

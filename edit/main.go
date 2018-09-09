@@ -5,31 +5,21 @@ import (
 	"fmt"
 	"syscall/js"
 
-	"github.com/barnex/shiny/frontend"
+	ui "github.com/barnex/shiny/frontend"
+	"github.com/barnex/shiny/game"
 )
 
 var (
 	document = js.Global().Get("document")
-	canvas   = document.Call("getElementById", "canvas")
-	ctx      = canvas.Call("getContext", "2d")
 
 	paletteW   = 4
-	paletteSrc = []string{
-		"tile2", "brick2", "gopher", "exit",
-		"lock", "locky", "lockg", "lockb",
-		"keyr", "keyy", "keyg", "keyb",
-		"arrowl", "arrowu", "arrowr", "arrowd",
-		"water", "crate", "button", "dottedline",
-		"pig",
-	}
-	paletteImg      []frontend.Img
-	paletteSel      int
-	selImg, tileImg frontend.Img
+	paletteSel int
+	selImg     ui.Img
 
 	splitW = 10
 
 	w, h           = 24, 16
-	D              = 64
+	D              = game.D
 	bordList, bord = makeBord(w, h)
 	mouseDown      = false
 )
@@ -37,24 +27,16 @@ var (
 func main() {
 	fmt.Println("WebAssembly running")
 
-	paletteImg = make([]frontend.Img, len(paletteSrc))
-	for i, src := range paletteSrc {
-		paletteImg[i] = frontend.LoadImg(src)
-	}
-	selImg = frontend.LoadImg("sel")
-	tileImg = paletteImg[0]
+	ui.OnMouseDown(onMouseDown)
 
-	canvas.Call("addEventListener", "mousedown", js.NewCallback(canvasClick))
+	selImg = game.GetImg("sel")
+
 	redraw()
 
 	<-(make(chan int))
 }
 
-func canvasClick(arg []js.Value) {
-	rect := canvas.Call("getBoundingClientRect")
-	x := arg[0].Get("clientX").Int() - rect.Get("left").Int()
-	y := arg[0].Get("clientY").Int() - rect.Get("top").Int()
-
+func onMouseDown(x, y int) {
 	if x < paletteW*D {
 		i, j := x/D, y/D
 		paletteClick(i, j)
@@ -88,7 +70,7 @@ func serializeBord() string {
 
 func paletteClick(i, j int) {
 	k := paletteW*j + i
-	if k < len(paletteImg) {
+	if k < len(game.ObjProto) {
 		paletteSel = k
 	}
 	redraw()
@@ -104,20 +86,24 @@ func drawBord() {
 		for i, tile := range bord[j] {
 			x := (paletteW+i)*D + splitW
 			y := j * D
-			frontend.Draw(tileImg, x, y)
-			frontend.Draw(paletteImg[tile], x, y)
+			ui.Draw(tileImg(), x, y)
+			ui.Draw(game.ObjProto[tile].Img(), x, y)
 		}
 	}
 }
 
+func tileImg() ui.Img {
+	return game.ObjProto[0].Img()
+}
+
 func drawPalette() {
 	i, j := 0, 0
-	for k, img := range paletteImg {
+	for k, obj := range game.ObjProto {
 		x, y := i*D, j*D
-		frontend.Draw(tileImg, x, y)
-		frontend.Draw(img, x, y)
+		ui.Draw(tileImg(), x, y)
+		ui.Draw(obj.Img(), x, y)
 		if k == paletteSel {
-			frontend.Draw(selImg, x, y)
+			ui.Draw(selImg, x, y)
 		}
 		i++
 		if i == paletteW {

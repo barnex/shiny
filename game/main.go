@@ -2,7 +2,9 @@ package game
 
 import ui "github.com/barnex/shiny/frontend"
 
-const D = 64 // Tile size in pixels
+const (
+	D = 64 // Tile size in pixels
+)
 
 func Main() {
 	m := NewMap(8, 6)

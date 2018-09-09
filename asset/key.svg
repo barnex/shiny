@@ -14,7 +14,7 @@
    width="325"
    height="325"
    viewBox="0 0 65 65"
-   sodipodi:docname="keyr.svg"
+   sodipodi:docname="key.svg"
    inkscape:export-filename="/home/arne/src/github.com/barnex/shiny/asset/keyy.png"
    inkscape:export-xdpi="18.904615"
    inkscape:export-ydpi="18.904615"
@@ -66,7 +66,7 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="0.921875"
-     inkscape:cx="-34.264792"
+     inkscape:cx="167.49792"
      inkscape:cy="33.710275"
      inkscape:window-x="0"
      inkscape:window-y="0"
@@ -84,7 +84,7 @@
      id="path3750-6"
      inkscape:connector-curvature="0" />
   <path
-     style="fill:#ff0000;fill-opacity:1;stroke:#000000;stroke-width:0.92741317;stroke-opacity:1"
+     style="fill:#00feff;fill-opacity:1;stroke:#000000;stroke-width:0.92741317;stroke-opacity:1"
      d="M 19.21852,16.630352 A 14.113429,13.711864 0 0 0 5.105087,30.342217 14.113429,13.711864 0 0 0 19.21852,44.054081 14.113429,13.711864 0 0 0 31.68354,36.75894 C 31.82384,36.77553 31.96115,36.8 32.10621,36.8 H 41.8 v 3.381546 c 0,1.816954 1.25892,3.279777 2.82269,3.279777 1.56377,0 2.82268,-1.462823 2.82268,-3.279777 V 36.8 h 2.1942 v 3.874316 c 0,1.872388 1.55152,3.379762 3.47874,3.379762 h 0.25728 c 1.92722,0 3.47874,-1.507374 3.47874,-3.379761 v -7.254075 -4.268889 c 0,-1.872388 -1.55152,-3.379761 -3.47874,-3.379761 H 32.50866 a 14.113429,13.711864 0 0 0 -13.29014,-9.14124 z m 0.0882,6.584552 a 7.0567144,6.8559322 0 0 1 7.05671,6.855932 7.0567144,6.8559322 0 0 1 -7.05671,6.855932 7.0567144,6.8559322 0 0 1 -7.05672,-6.855932 7.0567144,6.8559322 0 0 1 7.05672,-6.855932 z"
      id="path3750"
      inkscape:connector-curvature="0" />

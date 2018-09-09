@@ -1,13 +1,5 @@
 package game
 
-type Obj interface {
-	Img() string
-}
-
-type Tile struct{}
-
-func (t Tile) Img() string { return "tile" }
-
 //func IsWalkable(o Obj) bool {
 //	if o == nil {
 //		return true

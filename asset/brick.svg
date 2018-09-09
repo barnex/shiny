@@ -17,7 +17,60 @@
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
    sodipodi:docname="brick.svg">
   <defs
-     id="defs2" />
+     id="defs2">
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter902"
+       x="-0.026399998"
+       width="1.0528"
+       y="-0.026400002"
+       height="1.0528">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.18626665"
+         id="feGaussianBlur904" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter958"
+       x="-0.0312"
+       width="1.0624"
+       y="-0.0312"
+       height="1.0624">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.22013329"
+         id="feGaussianBlur960" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter998"
+       x="-0.011999999"
+       width="1.024"
+       y="-0.012000001"
+       height="1.024">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.084666658"
+         id="feGaussianBlur1000" />
+    </filter>
+    <filter
+       inkscape:collect="always"
+       style="color-interpolation-filters:sRGB"
+       id="filter1002"
+       x="-0.012000004"
+       width="1.024"
+       y="-0.011999996"
+       height="1.024">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.071437526"
+         id="feGaussianBlur1004" />
+    </filter>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -26,7 +79,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.2"
-     inkscape:cx="24.42805"
+     inkscape:cx="7.8209071"
      inkscape:cy="31.294791"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -35,7 +88,7 @@
      borderlayer="true"
      inkscape:showpageshadow="false"
      inkscape:window-width="1920"
-     inkscape:window-height="1061"
+     inkscape:window-height="1080"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0">
@@ -51,7 +104,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -61,31 +114,32 @@
      id="layer1"
      transform="translate(0,-280.06665)">
     <path
-       style="fill:#5e5e5e;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1"
+       style="fill:#4d4d4d;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1;filter:url(#filter998)"
        d="M 0,296.99998 H 16.933333 V 280.06665 Z"
        id="path817"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:#acacac;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       style="fill:#acacac;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
        d="M 16.93333,280.06665 H 0 v 16.93333 z"
        id="path817-3"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#fbfbfb;stroke-width:0.13282083;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       style="fill:none;stroke:#fbfbfb;stroke-width:0.13282083;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;filter:url(#filter902)"
        d="m 0,280.06665 16.933333,16.93333 v 0"
        id="path836"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#fbfbfb;stroke-width:0.13282083;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:none;stroke:#fbfbfb;stroke-width:0.13282083;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter958)"
        d="M 3.3333333e-6,296.99998 16.933333,280.06665 v 0"
        id="path836-6"
        inkscape:connector-curvature="0" />
     <rect
-       style="fill:#767676;fill-opacity:1;stroke:none;stroke-width:2.4870832;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       style="fill:#676767;fill-opacity:1;stroke:none;stroke-width:2.4870832;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter1002)"
        id="rect834"
        width="14.2875"
        height="14.28751"
        x="1.3229166"
-       y="281.38956" />
+       y="281.38956"
+       ry="0.79375976" />
   </g>
 </svg>

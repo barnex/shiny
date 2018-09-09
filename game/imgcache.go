@@ -8,6 +8,6 @@ func GetImg(src string) ui.Img {
 	if img, ok := texCache[src]; ok {
 		return img
 	}
-	texCache[src] = ui.LoadImg(src)
+	texCache[src] = ui.LoadImg("asset/" + src + ".png")
 	return texCache[src]
 }

@@ -16,9 +16,9 @@
    viewBox="0 0 64 64"
    sodipodi:docname="arrowr.svg"
    inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   inkscape:export-filename="/home/arne/src/github.com/barnex/shiny/asset/tile2.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96">
+   inkscape:export-filename="/home/arne/src/github.com/barnex/shiny/asset/arrowl.png"
+   inkscape:export-xdpi="95.255814"
+   inkscape:export-ydpi="95.255814">
   <metadata
      id="metadata8">
     <rdf:RDF>
@@ -47,8 +47,8 @@
      id="namedview4"
      showgrid="true"
      inkscape:zoom="10.429825"
-     inkscape:cx="19.969697"
-     inkscape:cy="29.264588"
+     inkscape:cx="17.476846"
+     inkscape:cy="33.099743"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="0"
@@ -57,21 +57,9 @@
        type="xygrid"
        id="grid817" />
   </sodipodi:namedview>
-  <rect
-     style="fill:#cccccc;fill-opacity:1;stroke:none;stroke-width:1.85996222;stroke-opacity:1"
-     id="rect819"
-     width="64"
-     height="64"
-     x="0"
-     y="0" />
   <path
-     style="fill:none;stroke:#989898;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     d="M 0,64 H 64 V 0 0"
-     id="path821"
-     inkscape:connector-curvature="0" />
-  <path
-     style="fill:#80ffff;fill-opacity:1;stroke:#000000;stroke-width:1.25px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-     d="M 46.25,25.75 27.5,7 H 21.25 15 L 40,32 15,57 h 6.25 6.25 l 25,-25 -6.25,-6.25"
+     style="fill:#80ffff;fill-opacity:1;stroke:#000000;stroke-width:1.25px;stroke-linecap:butt;stroke-linejoin:round;stroke-opacity:1"
+     d="M 48,26 29.25,7.25 H 23 9.75 l 24,25 -24,25 H 23 29.25 l 25,-25 L 48,26"
      id="path844"
      inkscape:connector-curvature="0"
      sodipodi:nodetypes="cccccccccc" />
