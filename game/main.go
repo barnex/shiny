@@ -1,37 +1,26 @@
 package game
 
-import ui "github.com/barnex/shiny/frontend"
-
 const (
 	D = 64 // Tile size in pixels
 )
 
+var (
+	currLevel *Level
+)
+
 func Main() {
-	m := NewMap(8, 6)
-	m.Draw()
+	level := DecodeLevel(`H4sIAAAAAAAA_1L-38jMyMjpk1qWmuOSWJLI-L-JgZGRkc0pJz85u5jxfxsDA4PY_1YmRkb26Njo2My8EpAY4_8WBgae_81MjEz_WxgYWRgY_jFO_d_EKCDBxMTEwMSACSRAgtSSAAFsEljERrgEAwAAAP__`)
+	level.Draw()
 }
 
-type Map struct {
-	layer0 [][]Obj
-	layer1 [][]Obj
-	player Pt
-}
-
-func NewMap(w, h int) *Map {
-	return &Map{
-		layer0: makeLayer(w, h),
-		layer1: makeLayer(w, h),
-	}
-}
-
-func (m *Map) Draw() {
-	for i := range m.layer0 {
-		for j := range m.layer0[i] {
-			p := Pt{j * D, i * D}
-			ui.Draw(GetImg("brick.png"), p.X, p.Y)
-		}
-	}
-}
+//func (m *Map) Draw() {
+//	for i := range m.layer0 {
+//		for j := range m.layer0[i] {
+//			p := Pt{j * D, i * D}
+//			ui.Draw(GetImg("brick.png"), p.X, p.Y)
+//		}
+//	}
+//}
 
 func makeLayer(w, h int) [][]Obj {
 	list := make([]Obj, w*h)

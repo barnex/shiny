@@ -7,7 +7,53 @@ import (
 	"encoding/gob"
 	"log"
 	"strings"
+
+	ui "github.com/barnex/shiny/frontend"
 )
+
+type Level struct {
+	layer0 [][]Obj
+	layer1 [][]Obj
+	player *Player
+}
+
+func (l *Level) Draw() {
+	//tile := DecodeObj(0)
+	for i := range l.layer0 {
+		for j, obj := range l.layer0[i] {
+			if obj == nil {
+				continue
+			}
+			ui.Draw(obj.Img(), j*D, i*D)
+		}
+	}
+}
+
+func DecodeLevel(data string) *Level {
+	ld, err := Decode(data)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	l := &Level{}
+
+	l.layer0 = makeLayer(len(ld.Blocks), len(ld.Blocks[0]))
+	l.layer1 = makeLayer(len(ld.Blocks), len(ld.Blocks[0]))
+
+	for i := range ld.Blocks {
+		for _, j := range ld.Blocks[i] {
+			//obj := DecodeObj(id)
+			//switch obj := obj.(type) {
+			//default:
+			l.layer0[i][j] = DecodeObj(0)
+			//case *Player:
+			//	l.player = obj
+			//	//case *
+			//}
+		}
+	}
+	return l
+}
 
 type LevelData struct {
 	Blocks [][]int

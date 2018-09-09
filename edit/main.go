@@ -58,18 +58,17 @@ var dummyImg = document.Call("createElement", "img")
 
 func uploadLevel() {
 	data := game.Encode(&level)
-	l, err := game.Decode(data)
+	l, err := game.Decode(data) // make sure we see encoding errors, if any
 	if err != nil {
 		log.Fatal(err)
 	}
 	level = l
-	redraw()
 	dummyImg.Set("src", data)
 }
 
 func paletteClick(i, j int) {
 	k := paletteW*j + i
-	if k < len(game.ObjProto) {
+	if k < game.NumObjID {
 		paletteSel = k
 	}
 	redraw()
@@ -86,18 +85,19 @@ func drawBord() {
 			x := (paletteW+i)*D + splitW
 			y := j * D
 			ui.Draw(tileImg(), x, y)
-			ui.Draw(game.ObjProto[tile].Img(), x, y)
+			ui.Draw(game.DecodeObj(tile).Img(), x, y)
 		}
 	}
 }
 
 func tileImg() ui.Img {
-	return game.ObjProto[0].Img()
+	return game.DecodeObj(0).Img()
 }
 
 func drawPalette() {
 	i, j := 0, 0
-	for k, obj := range game.ObjProto {
+	for k := 0; k < game.NumObjID; k++ {
+		obj := game.DecodeObj(k)
 		x, y := i*D, j*D
 		ui.Draw(tileImg(), x, y)
 		ui.Draw(obj.Img(), x, y)

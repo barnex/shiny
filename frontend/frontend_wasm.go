@@ -12,6 +12,13 @@ var (
 	ctx      = canvas.Call("getContext", "2d")
 )
 
+func OnKeyDown(f func(string)) {
+	document.Call("addEventListener", "keydown", js.NewCallback(func(arg []js.Value) {
+		key := arg[0].Get("key").String()
+		f(key)
+	}), true)
+}
+
 func OnMouseDown(f func(x, y int)) {
 	canvas.Call("addEventListener", "mousedown", js.NewCallback(func(arg []js.Value) {
 		rect := canvas.Call("getBoundingClientRect")
