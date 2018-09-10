@@ -18,15 +18,17 @@ type Level struct {
 }
 
 func (l *Level) Draw() {
-	//tile := DecodeObj(0)
+	tile := DecodeObj(0).Img()
 	for i := range l.layer0 {
 		for j, obj := range l.layer0[i] {
+			ui.Draw(tile, j*D, i*D)
 			if obj == nil {
 				continue
 			}
 			ui.Draw(obj.Img(), j*D, i*D)
 		}
 	}
+	ui.Draw(l.player.Img(), l.player.Pos.X*D, l.player.Pos.Y*D)
 }
 
 func DecodeLevel(data string) *Level {
@@ -35,21 +37,24 @@ func DecodeLevel(data string) *Level {
 		log.Fatal(err)
 	}
 
-	l := &Level{}
+	l := &Level{
+		player: &Player{Sprite: "player"},
+	}
 
-	l.layer0 = makeLayer(len(ld.Blocks), len(ld.Blocks[0]))
-	l.layer1 = makeLayer(len(ld.Blocks), len(ld.Blocks[0]))
+	l.layer0 = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
+	l.layer1 = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
 
 	for i := range ld.Blocks {
-		for _, j := range ld.Blocks[i] {
-			//obj := DecodeObj(id)
-			//switch obj := obj.(type) {
-			//default:
-			l.layer0[i][j] = DecodeObj(0)
-			//case *Player:
-			//	l.player = obj
-			//	//case *
-			//}
+		for j, id := range ld.Blocks[i] {
+			obj := DecodeObj(id)
+			switch obj := obj.(type) {
+			default:
+				l.layer0[i][j] = obj
+			case *Player:
+				l.player = obj
+				l.player.Pos = Pt{j, i}
+				//	//case *
+			}
 		}
 	}
 	return l
@@ -73,6 +78,12 @@ func Encode(d *LevelData) string {
 	}
 	gz.Flush()
 	return buf.String()
+
+	//buf.WriteByte(byte(len(d.Blocks)))
+	//buf.WriteByte(byte(len(d.Blocks[0])))
+	//for i:=range d.Blocks{
+	//	for j:=range d.Blocks{}
+	//}
 }
 
 func Decode(data string) (LevelData, error) {

@@ -9,7 +9,9 @@ var (
 )
 
 func Main() {
-	level := DecodeLevel(`H4sIAAAAAAAA_1L-38jMyMjpk1qWmuOSWJLI-L-JgZGRkc0pJz85u5jxfxsDA4PY_1YmRkb26Njo2My8EpAY4_8WBgae_81MjEz_WxgYWRgY_jFO_d_EKCDBxMTEwMSACSRAgtSSAAFsEljERrgEAwAAAP__`)
+	level := DecodeLevel(
+		`H4sIAAAAAAAA_1L-38jMyMjpk1qWmuOSWJLI-L-JgZGRkc0pJz85u5jxfxsDA4PY_1YmRkb26Njo2My8EpAY4_8WBgae_81MjEz_WxgYWRgY_jFO_d_EKCDBxMTEgA1IMLHI4JDApQOr6KgESRIMAAAAAP__`,
+	)
 	level.Draw()
 }
 

@@ -102,7 +102,10 @@ type Brick struct{ Sprite }
 
 type Tile struct{ Sprite }
 
-type Player struct{ Sprite }
+type Player struct {
+	Sprite
+	Pos Pt
+}
 
 type Exit struct{ Sprite }
 
