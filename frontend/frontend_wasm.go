@@ -19,6 +19,20 @@ func OnKeyDown(f func(string)) {
 	}), true)
 }
 
+func OnKeyUp(f func(string)) {
+	document.Call("addEventListener", "keyup", js.NewCallback(func(arg []js.Value) {
+		key := arg[0].Get("key").String()
+		f(key)
+	}), true)
+}
+
+func OnKeyPress(f func(string)) {
+	document.Call("addEventListener", "keypress", js.NewCallback(func(arg []js.Value) {
+		key := arg[0].Get("key").String()
+		f(key)
+	}), true)
+}
+
 func OnMouseDown(f func(x, y int)) {
 	canvas.Call("addEventListener", "mousedown", js.NewCallback(func(arg []js.Value) {
 		rect := canvas.Call("getBoundingClientRect")

@@ -6,19 +6,27 @@ import (
 	ui "github.com/barnex/shiny/frontend"
 )
 
+var (
+	tile   = &Tile{Sprite: "tile"}
+	brick  = &Brick{Sprite: "brick"}
+	player = &Player{Sprite: "player"}
+	exit   = &Exit{Sprite: "exit"}
+	water  = &Water{Sprite: "water"}
+)
+
 // ObjProto maps integers onto a prototype object.
 func DecodeObj(id int) Obj {
 	switch id {
 	default:
 		panic(fmt.Sprintf("unknown object id: %v", id))
 	case 0:
-		return &Tile{Sprite: "tile"}
+		return tile
 	case 1:
-		return &Brick{Sprite: "brick"}
+		return brick
 	case 2:
-		return &Player{Sprite: "player"}
+		return player
 	case 3:
-		return &Exit{Sprite: "exit"}
+		return exit
 	case 4:
 		return &Lock{Sprite: "lockr", ID: 0}
 	case 5:
@@ -36,7 +44,7 @@ func DecodeObj(id int) Obj {
 	case 11:
 		return &Key{Sprite: "keyb", ID: 3}
 	case 12:
-		return &Water{Sprite: "water"}
+		return water
 	case 13:
 		return &Flippers{Sprite: "flippers"}
 	case 14:
@@ -100,11 +108,28 @@ func (s Sprite) Img() ui.Img {
 
 type Brick struct{ Sprite }
 
+func (b *Brick) PlayerCanWalk() bool { return false }
+
 type Tile struct{ Sprite }
 
 type Player struct {
 	Sprite
 	Pos Pt
+}
+
+func (p *Player) Move(dir Pt) {
+	dst := p.Pos.Add(dir)
+	obj := currLevel.At(dst)
+	if PlayerCanWalk(obj) {
+		p.Pos = p.Pos.Add(dir)
+	}
+}
+
+func PlayerCanWalk(o Obj) bool {
+	if o, ok := o.(interface{ PlayerCanWalk() bool }); ok {
+		return o.PlayerCanWalk()
+	}
+	return true
 }
 
 type Exit struct{ Sprite }

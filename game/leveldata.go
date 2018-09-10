@@ -11,24 +11,37 @@ import (
 	ui "github.com/barnex/shiny/frontend"
 )
 
+const D = 64
+
 type Level struct {
 	layer0 [][]Obj
 	layer1 [][]Obj
-	player *Player
 }
 
+func (l *Level) At(p Pt) Obj {
+	if p.X < 0 || p.Y < 0 || p.X >= l.Width() || p.Y >= l.Height() {
+		return brick
+	}
+	if obj := l.layer1[p.Y][p.X]; obj != nil {
+		return obj
+	}
+	return l.layer0[p.Y][p.X]
+}
+
+func (l *Level) Width() int  { return len(l.layer0[0]) }
+func (l *Level) Height() int { return len(l.layer0) }
+
 func (l *Level) Draw() {
-	tile := DecodeObj(0).Img()
 	for i := range l.layer0 {
 		for j, obj := range l.layer0[i] {
-			ui.Draw(tile, j*D, i*D)
+			ui.Draw(tile.Img(), j*D, i*D)
 			if obj == nil {
 				continue
 			}
 			ui.Draw(obj.Img(), j*D, i*D)
 		}
 	}
-	ui.Draw(l.player.Img(), l.player.Pos.X*D, l.player.Pos.Y*D)
+	ui.Draw(player.Img(), player.Pos.X*D, player.Pos.Y*D)
 }
 
 func DecodeLevel(data string) *Level {
@@ -37,9 +50,7 @@ func DecodeLevel(data string) *Level {
 		log.Fatal(err)
 	}
 
-	l := &Level{
-		player: &Player{Sprite: "player"},
-	}
+	l := &Level{}
 
 	l.layer0 = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
 	l.layer1 = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
@@ -51,13 +62,21 @@ func DecodeLevel(data string) *Level {
 			default:
 				l.layer0[i][j] = obj
 			case *Player:
-				l.player = obj
-				l.player.Pos = Pt{j, i}
+				player.Pos = Pt{j, i}
 				//	//case *
 			}
 		}
 	}
 	return l
+}
+
+func makeLayer(w, h int) [][]Obj {
+	list := make([]Obj, w*h)
+	grid := make([][]Obj, h)
+	for j := range grid {
+		grid[j] = list[(j)*w : (j+1)*w]
+	}
+	return grid
 }
 
 type LevelData struct {

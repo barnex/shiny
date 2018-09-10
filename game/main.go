@@ -1,7 +1,9 @@
 package game
 
-const (
-	D = 64 // Tile size in pixels
+import (
+	"time"
+
+	ui "github.com/barnex/shiny/frontend"
 )
 
 var (
@@ -9,26 +11,41 @@ var (
 )
 
 func Main() {
-	level := DecodeLevel(
+	currLevel = DecodeLevel(
 		`H4sIAAAAAAAA_1L-38jMyMjpk1qWmuOSWJLI-L-JgZGRkc0pJz85u5jxfxsDA4PY_1YmRkb26Njo2My8EpAY4_8WBgae_81MjEz_WxgYWRgY_jFO_d_EKCDBxMTEgA1IMLHI4JDApQOr6KgESRIMAAAAAP__`,
 	)
-	level.Draw()
+
+	keypress := make(chan string)
+	//keyup := make(chan string)
+	ui.OnKeyPress(func(key string) { keypress <- key })
+	//ui.OnKeyUp(func(key string) { keyup <- key })
+
+	ticker := time.Tick(500 * time.Millisecond)
+
+	currLevel.Draw()
+	for {
+		select {
+		case keycode := <-keypress:
+			handleKey(keycode)
+		case <-ticker:
+			handleTick()
+		}
+		// check dead, etc
+		currLevel.Draw()
+	}
 }
 
-//func (m *Map) Draw() {
-//	for i := range m.layer0 {
-//		for j := range m.layer0[i] {
-//			p := Pt{j * D, i * D}
-//			ui.Draw(GetImg("brick.png"), p.X, p.Y)
-//		}
-//	}
-//}
+func handleTick() {}
 
-func makeLayer(w, h int) [][]Obj {
-	list := make([]Obj, w*h)
-	grid := make([][]Obj, h)
-	for j := range grid {
-		grid[j] = list[(j)*w : (j+1)*w]
+func handleKey(keyCode string) {
+	switch keyCode {
+	case "ArrowLeft":
+		player.Move(Left)
+	case "ArrowRight":
+		player.Move(Right)
+	case "ArrowUp":
+		player.Move(Up)
+	case "ArrowDown":
+		player.Move(Down)
 	}
-	return grid
 }

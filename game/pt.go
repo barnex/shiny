@@ -10,9 +10,9 @@ var (
 	Ey = Pt{0, 1}
 
 	Right = Pt{1, 0}
-	Up    = Pt{0, 1}
+	Up    = Pt{0, -1}
 	Left  = Pt{-1, 0}
-	Down  = Pt{0, -1}
+	Down  = Pt{0, 1}
 )
 
 func (p Pt) Add(q Pt) Pt {
