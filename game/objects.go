@@ -106,9 +106,20 @@ func (s Sprite) Img() ui.Img {
 	return GetImg(string(s))
 }
 
-type Brick struct{ Sprite }
+type IsLayer1 interface {
+	Obj
+	IsLayer1()
+}
 
-func (b *Brick) PlayerCanWalk() bool { return false }
+type layer1 struct{}
+
+func (layer1) IsLayer1() {}
+
+type Brick struct {
+	Sprite
+	cantWalk
+	layer1
+}
 
 type Tile struct{ Sprite }
 
@@ -119,10 +130,19 @@ type Player struct {
 
 func (p *Player) Move(dir Pt) {
 	dst := p.Pos.Add(dir)
-	obj := currLevel.At(dst)
-	if PlayerCanWalk(obj) {
-		p.Pos = p.Pos.Add(dir)
+
+	obj := currLevel.At1(dst)
+	fmt.Println("Player.Move:dst=", obj)
+	if obj, ok := obj.(*Crate); ok {
+		obj.Bump(dst, dst.Add(dir))
 	}
+	obj = currLevel.At1(dst)
+
+	if PlayerCanWalk(obj) {
+		p.Pos = dst
+	}
+
+	//obj.TouchBy(player, p.Pos)
 }
 
 func PlayerCanWalk(o Obj) bool {
@@ -131,6 +151,10 @@ func PlayerCanWalk(o Obj) bool {
 	}
 	return true
 }
+
+type cantWalk struct{}
+
+func (cantWalk) PlayerCanWalk() bool { return false }
 
 type Exit struct{ Sprite }
 
@@ -148,12 +172,30 @@ type Water struct{ Sprite }
 
 type Flippers struct{ Sprite }
 
-type Crate struct{ Sprite }
+type Crate struct {
+	Sprite
+	layer1
+	cantWalk
+}
+
+func (c *Crate) Bump(src, dst Pt) {
+	obj := currLevel.At1(dst)
+	fmt.Println("Crate.Bump:dst=", obj)
+	if obj != nil {
+		return
+	}
+	currLevel.Move(src, dst)
+	if currLevel.At0(dst) == water {
+		currLevel.Set0(dst, tile)
+		currLevel.Set1(dst, nil)
+	}
+}
 
 type Bomb struct{ Sprite }
 
 type Walker struct {
 	Sprite
+	layer1
 	Dir Pt
 }
 

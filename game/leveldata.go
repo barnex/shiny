@@ -5,6 +5,7 @@ import (
 	"compress/gzip"
 	"encoding/base64"
 	"encoding/gob"
+	"fmt"
 	"log"
 	"strings"
 
@@ -14,31 +15,68 @@ import (
 const D = 64
 
 type Level struct {
-	layer0 [][]Obj
-	layer1 [][]Obj
+	layer [2][][]Obj
 }
 
-func (l *Level) At(p Pt) Obj {
+func (l *Level) Move(src, dst Pt) {
+	fmt.Println("level:move:", src, dst)
+	l.layer[1][dst.Y][dst.X] = l.layer[1][src.Y][src.X]
+	l.layer[1][src.Y][src.X] = nil
+}
+
+func (l *Level) At0(p Pt) Obj {
+	return l.at(0, p)
+}
+
+func (l *Level) At1(p Pt) Obj {
+	return l.at(1, p)
+}
+
+func (l *Level) at(layer int, p Pt) Obj {
 	if p.X < 0 || p.Y < 0 || p.X >= l.Width() || p.Y >= l.Height() {
 		return brick
 	}
-	if obj := l.layer1[p.Y][p.X]; obj != nil {
+	if obj := l.layer[layer][p.Y][p.X]; obj != nil {
 		return obj
 	}
-	return l.layer0[p.Y][p.X]
+	return l.layer[layer][p.Y][p.X]
 }
 
-func (l *Level) Width() int  { return len(l.layer0[0]) }
-func (l *Level) Height() int { return len(l.layer0) }
+// TODO: use everywhere
+func (l *Level) Set0(p Pt, o Obj) {
+	if _, ok := o.(IsLayer1); ok {
+		panic("layer1 object in layer0")
+	}
+	l.set(0, p, o)
+}
+
+func (l *Level) Set1(p Pt, o Obj) {
+	if _, ok := o.(IsLayer1); o != nil && !ok {
+		panic("layer0 object in layer1")
+	}
+	l.set(1, p, o)
+}
+
+func (l *Level) set(layer int, p Pt, o Obj) {
+	l.layer[layer][p.Y][p.X] = o
+}
+
+func (l *Level) Width() int  { return len(l.layer[0][0]) }
+func (l *Level) Height() int { return len(l.layer[0]) }
 
 func (l *Level) Draw() {
-	for i := range l.layer0 {
-		for j, obj := range l.layer0[i] {
-			ui.Draw(tile.Img(), j*D, i*D)
-			if obj == nil {
-				continue
+	for i := range l.layer[0] {
+		for j, obj := range l.layer[0][i] {
+			x := j * D
+			y := i * D
+			ui.Draw(tile.Img(), x, y)
+			if obj != nil {
+				ui.Draw(obj.Img(), x, y)
 			}
-			ui.Draw(obj.Img(), j*D, i*D)
+			if obj := l.layer[1][i][j]; obj != nil {
+				ui.Draw(obj.Img(), x, y)
+				ui.Draw(GetImg("sel"), x, y)
+			}
 		}
 	}
 	ui.Draw(player.Img(), player.Pos.X*D, player.Pos.Y*D)
@@ -52,18 +90,22 @@ func DecodeLevel(data string) *Level {
 
 	l := &Level{}
 
-	l.layer0 = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
-	l.layer1 = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
+	l.layer[0] = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
+	l.layer[1] = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
 
 	for i := range ld.Blocks {
 		for j, id := range ld.Blocks[i] {
 			obj := DecodeObj(id)
 			switch obj := obj.(type) {
-			default:
-				l.layer0[i][j] = obj
 			case *Player:
+				fmt.Println("decode:", j, i, "player")
 				player.Pos = Pt{j, i}
-				//	//case *
+			case IsLayer1:
+				fmt.Println("decode:layer1:", j, i, obj)
+				l.layer[1][i][j] = obj
+			default:
+				fmt.Println("decode:layer0:", j, i, obj)
+				l.layer[0][i][j] = obj
 			}
 		}
 	}
