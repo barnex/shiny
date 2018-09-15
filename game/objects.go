@@ -129,32 +129,27 @@ type Player struct {
 
 func (p *Player) Move(dir Pt) {
 	fmt.Println("player:move:", dir)
-	dst := p.Pos.Add(dir)
+	src := p.Pos
+	dst := src.Add(dir)
 
-	if arrow, ok := currLevel.At0(dst).(*Arrow); ok {
-		if dir.Dot(arrow.Dir) < 0 {
+	if !currLevel.CanMove0(src, dir) {
+		return
+	}
+
+	{
+		obj := currLevel.At1(dst)
+		if c, ok := obj.(*Crate); ok {
+			c.Bump(dst, dir)
+			obj = currLevel.At1(dst)
+		}
+		if !PlayerCanWalk(obj) {
 			return
 		}
 	}
 
-	obj := currLevel.At1(dst)
-	if c, ok := obj.(*Crate); ok {
-		c.Bump(dst, dir)
-		obj = currLevel.At1(dst)
-	}
-
-	if !PlayerCanWalk(obj) {
-		return
-	}
-
-	obj = currLevel.At0(dst)
-	if !PlayerCanWalk(obj) {
-		return
-	}
-
 	// finally, can walk
 	p.Pos = dst
-	Step(obj)
+	Step(currLevel.At0(dst))
 }
 
 func PlayerCanWalk(o Obj) bool {
