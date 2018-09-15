@@ -18,11 +18,21 @@ var (
 
 	splitW = 10
 
-	w, h      = 24, 16
-	D         = game.D
-	level     = game.LevelData{Blocks: makeBord(w, h)}
+	//w, h      = 24, 16
+	D     = game.D
+	level = game.LevelData{Blocks: makeBord(26, 16)}
+	//	level, _ = game.Decode(
+	//		`H4sIAAAAAAAA_1L-38jMyMjpk1qWmuOSWJLI-L-JgZGRkc0pJz85u5jxfxsDA4PY_1YmRkb26Njo2My8EpAY4_8WBgae_81MjEz_WxgYWRgY_jFO_d_EKCDBxMTEgA1IMLHIMAgIiYgxODi5uDFIyMhJSUAkGGQYGDi4ePgYDIxMzJB1gCTAwMLKxg5FAgeQYDLQYHCQsWBiQHMEQocWug4jBh0nCSsMNyPZAdfChCoBt4ONCburoEGB27l0kGAAAAAA`,
+	//	)
 	mouseDown = false
 )
+
+func w() int {
+	return len(level.Blocks[0])
+}
+func h() int {
+	return len(level.Blocks)
+}
 
 func main() {
 	fmt.Println("WebAssembly running")
@@ -47,7 +57,7 @@ func onMouseDown(x, y int) {
 }
 
 func bordClick(i, j int) {
-	if i < w && j < h {
+	if i < w() && j < h() {
 		level.Blocks[j][i] = paletteSel
 		uploadLevel()
 	}

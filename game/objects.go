@@ -68,21 +68,21 @@ func DecodeObj(id int) Obj {
 	case 23:
 		return &Walker{Sprite: "pigd", Dir: Down}
 	case 24:
-		return &Door{Sprite: "gateor", ID: 0}
+		return &Gate{spriteOpen: "gateor", spriteClosed: "gatecr", ID: 0}
 	case 25:
-		return &Door{Sprite: "gateoy", ID: 1}
+		return &Gate{spriteOpen: "gateoy", spriteClosed: "gatecy", ID: 1}
 	case 26:
-		return &Door{Sprite: "gateog", ID: 2}
+		return &Gate{spriteOpen: "gateog", spriteClosed: "gatecg", ID: 2}
 	case 27:
-		return &Door{Sprite: "gateob", ID: 3}
+		return &Gate{spriteOpen: "gateob", spriteClosed: "gatecb", ID: 3}
 	case 28:
-		return &Door{Sprite: "gatecr", ID: 0, Closed: true}
+		return &Gate{spriteOpen: "gateor", spriteClosed: "gatecr", ID: 0, Closed: true}
 	case 29:
-		return &Door{Sprite: "gatecy", ID: 1, Closed: true}
+		return &Gate{spriteOpen: "gateoy", spriteClosed: "gatecy", ID: 1, Closed: true}
 	case 30:
-		return &Door{Sprite: "gatecg", ID: 2, Closed: true}
+		return &Gate{spriteOpen: "gateog", spriteClosed: "gatecg", ID: 2, Closed: true}
 	case 31:
-		return &Door{Sprite: "gatecb", ID: 3, Closed: true}
+		return &Gate{spriteOpen: "gateob", spriteClosed: "gatecb", ID: 3, Closed: true}
 	case 32:
 		return &Button{Sprite: "buttonr", ID: 0}
 	case 33:
@@ -118,7 +118,6 @@ func (layer1) IsLayer1() {}
 type Brick struct {
 	Sprite
 	cantWalk
-	layer1
 }
 
 type Tile struct{ Sprite }
@@ -129,20 +128,33 @@ type Player struct {
 }
 
 func (p *Player) Move(dir Pt) {
+	fmt.Println("player:move:", dir)
 	dst := p.Pos.Add(dir)
 
+	if arrow, ok := currLevel.At0(dst).(*Arrow); ok {
+		if dir.Dot(arrow.Dir) < 0 {
+			return
+		}
+	}
+
 	obj := currLevel.At1(dst)
-	fmt.Println("Player.Move:dst=", obj)
-	if obj, ok := obj.(*Crate); ok {
-		obj.Bump(dst, dst.Add(dir))
-	}
-	obj = currLevel.At1(dst)
-
-	if PlayerCanWalk(obj) {
-		p.Pos = dst
+	if c, ok := obj.(*Crate); ok {
+		c.Bump(dst, dir)
+		obj = currLevel.At1(dst)
 	}
 
-	//obj.TouchBy(player, p.Pos)
+	if !PlayerCanWalk(obj) {
+		return
+	}
+
+	obj = currLevel.At0(dst)
+	if !PlayerCanWalk(obj) {
+		return
+	}
+
+	// finally, can walk
+	p.Pos = dst
+	Step(obj)
 }
 
 func PlayerCanWalk(o Obj) bool {
@@ -161,6 +173,7 @@ type Exit struct{ Sprite }
 type Lock struct {
 	Sprite
 	ID int
+	cantWalk
 }
 
 type Key struct {
@@ -178,16 +191,19 @@ type Crate struct {
 	cantWalk
 }
 
-func (c *Crate) Bump(src, dst Pt) {
+func (c *Crate) Bump(src, dir Pt) {
+	dst := src.Add(dir)
 	obj := currLevel.At1(dst)
 	fmt.Println("Crate.Bump:dst=", obj)
 	if obj != nil {
 		return
 	}
-	currLevel.Move(src, dst)
-	if currLevel.At0(dst) == water {
-		currLevel.Set0(dst, tile)
-		currLevel.Set1(dst, nil)
+	if currLevel.CanMove01(src, dir) {
+		currLevel.move(src, dir)
+		if currLevel.At0(dst) == water {
+			currLevel.Set0(dst, tile)
+			currLevel.Set1(dst, nil)
+		}
 	}
 }
 
@@ -204,10 +220,35 @@ type Button struct {
 	ID int
 }
 
-type Door struct {
-	Sprite
-	ID     int
-	Closed bool
+func (b *Button) Step() {
+	fmt.Println("button:step")
+	for i := range currLevel.layer[0] {
+		for _, obj := range currLevel.layer[0][i] {
+			if g, ok := obj.(*Gate); ok {
+				if g.ID == b.ID {
+					fmt.Println("botton:step:toggle:", g)
+					g.Closed = !g.Closed
+				}
+			}
+		}
+	}
+}
+
+type Gate struct {
+	spriteOpen, spriteClosed Sprite
+	ID                       int
+	Closed                   bool
+}
+
+func (g *Gate) PlayerCanWalk() bool {
+	return !g.Closed
+}
+
+func (g *Gate) Img() ui.Img {
+	if g.Closed {
+		return g.spriteClosed.Img()
+	}
+	return g.spriteOpen.Img()
 }
 
 type Arrow struct {

@@ -23,6 +23,10 @@ func (p Pt) Sub(q Pt) Pt {
 	return Pt{p.X - q.X, p.Y - q.Y}
 }
 
+func (p Pt) Dot(q Pt) int {
+	return p.X*q.X + p.Y*q.Y
+}
+
 // Clip X,Y within [-1, 1],
 // e.g. to limit speed.
 func (p Pt) Clip1() Pt {

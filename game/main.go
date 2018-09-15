@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"time"
 
 	ui "github.com/barnex/shiny/frontend"
@@ -12,7 +13,7 @@ var (
 
 func Main() {
 	currLevel = DecodeLevel(
-		`H4sIAAAAAAAA_1L-38jMyMjpk1qWmuOSWJLI-L-JgZGRkc0pJz85u5jxfxsDA4PY_1YmRkb26Njo2My8EpAY4_8WBgae_81MjEz_WxgYWRgY_jFO_d_EKCDBxMTEgA1IMLHIMAgIiYgxODi5uDFIyMhJSUAkGGQYGDi4ePgYDIxMzJB1gCTAwMLKxg5FAgeQYDLQYHCQsWBiQHMEQocWug4jBh0nCSsMNyPZAdfChCoBt4ONCburoEGB27l0kGAAAAAA`,
+		`H4sIAAAAAAAA_1L-38jMyMjpk1qWmuOSWJLI-L-JgZGRkc0pJz85u5jxfxsDA4PY_1YmRkb26Njo2My8EpAY4_8WBgae_81MjEz_WxgYWRgY_jFu_d_EKCDFwoABJMCAQQqbDIMEA1YpiAwDFimwWSCIIQWScXNywaIL6gIsupBk0HSBxKX47KA8iJSMBALIMKBKycAkZWTQpLACFCkHnFJGaLpM5Mz0oGwDhDATExODlIaYiB6GNTY8bEwMUloaGphSYF0MAAAAAP__`,
 	)
 
 	keypress := make(chan string)
@@ -38,14 +39,15 @@ func Main() {
 func handleTick() {}
 
 func handleKey(keyCode string) {
+	fmt.Println("handleKey:", keyCode)
 	switch keyCode {
-	case "ArrowLeft":
+	case "ArrowLeft", "s", "h":
 		player.Move(Left)
-	case "ArrowRight":
+	case "ArrowRight", "f", "l":
 		player.Move(Right)
-	case "ArrowUp":
+	case "ArrowUp", "e", "k":
 		player.Move(Up)
-	case "ArrowDown":
+	case "ArrowDown", "d", "j":
 		player.Move(Down)
 	}
 }

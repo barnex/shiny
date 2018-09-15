@@ -18,10 +18,45 @@ type Level struct {
 	layer [2][][]Obj
 }
 
-func (l *Level) Move(src, dst Pt) {
-	fmt.Println("level:move:", src, dst)
+func (l *Level) CanMove0(src, dir Pt) bool {
+	dst := src.Add(dir)
+	obj := l.At0(dst)
+	if !PlayerCanWalk(obj) {
+		return false
+	}
+	if arrow, ok := obj.(*Arrow); ok {
+		if dir.Dot(arrow.Dir) < 0 {
+			return false
+		}
+	}
+	return true
+}
+
+func (l *Level) CanMove1(src, dir Pt) bool {
+	dst := src.Add(dir)
+	if l.At1(dst) != nil {
+		return false
+	}
+	return true
+}
+
+func (l *Level) CanMove01(src, dir Pt) bool {
+	return l.CanMove0(src, dir) && l.CanMove1(src, dir)
+}
+
+func (l *Level) move(src, dir Pt) {
+	fmt.Println("level:move:", src, dir)
+	dst := src.Add(dir)
 	l.layer[1][dst.Y][dst.X] = l.layer[1][src.Y][src.X]
 	l.layer[1][src.Y][src.X] = nil
+	Step(l.At0(dst))
+}
+
+func Step(obj Obj) {
+	fmt.Println("step", obj, "?")
+	if s, ok := obj.(interface{ Step() }); ok {
+		s.Step()
+	}
 }
 
 func (l *Level) At0(p Pt) Obj {
