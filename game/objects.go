@@ -60,13 +60,13 @@ func DecodeObj(id int) Obj {
 	case 19:
 		return &Arrow{Sprite: "arrowd", Dir: Down}
 	case 20:
-		return &Walker{Sprite: "pigr", Dir: Right}
+		return &Walker{Dir: Right}
 	case 21:
-		return &Walker{Sprite: "pigu", Dir: Up}
+		return &Walker{Dir: Up}
 	case 22:
-		return &Walker{Sprite: "pigl", Dir: Left}
+		return &Walker{Dir: Left}
 	case 23:
-		return &Walker{Sprite: "pigd", Dir: Down}
+		return &Walker{Dir: Down}
 	case 24:
 		return &Gate{spriteOpen: "gateor", spriteClosed: "gatecr", ID: 0}
 	case 25:
@@ -252,13 +252,31 @@ func (b *Bomb) Step(p Pt) {
 }
 
 type Walker struct {
-	Sprite
 	layer1
 	Dir Pt
 	ts  int
 }
 
+func (w *Walker) Img() ui.Img {
+	switch w.Dir {
+	default:
+		return Sprite("pigl").Img()
+	case Up:
+		return Sprite("pigu").Img()
+	case Down:
+		return Sprite("pigd").Img()
+	case Left:
+		return Sprite("pigl").Img()
+	case Right:
+		return Sprite("pigr").Img()
+	}
+}
+
 func (w *Walker) Tick(pos Pt) {
+	defer w.setTS()
+	if w.ts == now {
+		return
+	}
 	if !currLevel.CanMove01(pos, w.Dir) {
 		w.Dir = w.Dir.Mul(-1)
 		return
@@ -266,10 +284,11 @@ func (w *Walker) Tick(pos Pt) {
 	if currLevel.player.Pos == pos {
 		currLevel.player.Kill()
 	}
-	if w.ts != now {
-		currLevel.move(pos, w.Dir)
-		w.ts = now
-	}
+	currLevel.move(pos, w.Dir)
+}
+
+func (w *Walker) setTS() {
+	w.ts = now
 }
 
 type Button struct {

@@ -120,7 +120,6 @@ func (l *Level) Draw() {
 			}
 			if obj := l.layer[1][i][j]; obj != nil {
 				ui.Draw(obj.Img(), x, y)
-				ui.Draw(GetImg("sel"), x, y)
 			}
 		}
 	}
