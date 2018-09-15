@@ -138,7 +138,7 @@ func (p *Player) Move(dir Pt) {
 	src := p.Pos
 	dst := src.Add(dir)
 
-	if !currLevel.CanMove0(src, dir) {
+	if !currLevel.CanMove0(src, dir) && !(currLevel.At0(dst) == water && p.hasFlippers) {
 		return
 	}
 
@@ -207,6 +207,7 @@ func (k *Key) Grab(pos Pt) {
 
 type Water struct {
 	Sprite
+	cantWalk
 }
 
 type Flippers struct {
@@ -231,7 +232,7 @@ func (c *Crate) Bump(src, dir Pt) {
 	if obj != nil {
 		return
 	}
-	if currLevel.CanMove01(src, dir) {
+	if currLevel.CanMove01(src, dir) || currLevel.At0(dst) == water {
 		currLevel.move(src, dir)
 		if currLevel.At0(dst) == water {
 			currLevel.Set0(dst, tile)
@@ -254,6 +255,21 @@ type Walker struct {
 	Sprite
 	layer1
 	Dir Pt
+	ts  int
+}
+
+func (w *Walker) Tick(pos Pt) {
+	if !currLevel.CanMove01(pos, w.Dir) {
+		w.Dir = w.Dir.Mul(-1)
+		return
+	}
+	if currLevel.player.Pos == pos {
+		currLevel.player.Kill()
+	}
+	if w.ts != now {
+		currLevel.move(pos, w.Dir)
+		w.ts = now
+	}
 }
 
 type Button struct {

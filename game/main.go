@@ -37,7 +37,7 @@ func Main() {
 }
 
 func handleTick() {
-
+	currLevel.Tick()
 }
 
 func handleKey(keyCode string) {

@@ -16,6 +16,17 @@ type Level struct {
 	player *Player
 }
 
+var now = 0
+
+func (l *Level) Tick() {
+	now++
+	for _, pos := range l.iter {
+		if t, ok := l.At1(pos).(interface{ Tick(Pt) }); ok {
+			t.Tick(pos)
+		}
+	}
+}
+
 func (l *Level) CanMove0(src, dir Pt) bool {
 	dst := src.Add(dir)
 	obj := l.At0(dst)
@@ -45,8 +56,8 @@ func (l *Level) CanMove01(src, dir Pt) bool {
 func (l *Level) move(src, dir Pt) {
 	fmt.Println("level:move:", src, dir)
 	dst := src.Add(dir)
-	l.layer[1][dst.Y][dst.X] = l.layer[1][src.Y][src.X]
-	l.layer[1][src.Y][src.X] = nil
+	l.Set1(dst, l.At1(src))
+	l.Set1(src, nil)
 	l.Step(dst)
 }
 
