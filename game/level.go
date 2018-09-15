@@ -28,6 +28,12 @@ func (l *Level) Tick() {
 }
 
 func (l *Level) CanMove0(src, dir Pt) bool {
+	// arrow on current tile
+	if arrow, ok := l.At0(src).(*Arrow); ok {
+		if dir.Dot(arrow.Dir) < 0 {
+			return false
+		}
+	}
 	dst := src.Add(dir)
 	obj := l.At0(dst)
 	if !PlayerCanWalk(obj) {
