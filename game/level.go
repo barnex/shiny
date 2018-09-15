@@ -25,6 +25,19 @@ func (l *Level) Tick() {
 			t.Tick(pos)
 		}
 	}
+	for _, pos := range l.iter {
+		if a, ok := l.At0(pos).(*Arrow); ok {
+			if c, ok := l.At1(pos).(*Crate); ok { // TODO -> SetTS
+				if c.ts != now && l.At0(pos) != nil && l.CanMove01(pos, a.Dir) {
+					l.move(pos, a.Dir)
+				}
+				c.ts = now
+			}
+		}
+	}
+	if a, ok := l.At0(l.player.Pos).(*Arrow); ok {
+		l.player.Move(a.Dir)
+	}
 }
 
 func (l *Level) CanMove0(src, dir Pt) bool {

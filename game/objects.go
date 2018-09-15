@@ -223,6 +223,7 @@ type Crate struct {
 	Sprite
 	layer1
 	cantWalk
+	ts int
 }
 
 func (c *Crate) Bump(src, dir Pt) {
