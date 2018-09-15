@@ -1,13 +1,8 @@
 package game
 
 import (
-	"bytes"
-	"compress/gzip"
-	"encoding/base64"
-	"encoding/gob"
 	"fmt"
 	"log"
-	"strings"
 
 	ui "github.com/barnex/shiny/frontend"
 )
@@ -15,7 +10,10 @@ import (
 const D = 64
 
 type Level struct {
-	layer [2][][]Obj
+	layer  [2][][]Obj
+	list   [2][]Obj
+	iter   []Pt
+	player *Player
 }
 
 func (l *Level) CanMove0(src, dir Pt) bool {
@@ -52,6 +50,7 @@ func (l *Level) move(src, dir Pt) {
 	l.Step(dst)
 }
 
+// TODO: Trigger
 func (l *Level) Step(p Pt) {
 	obj := l.At0(p)
 	fmt.Println("step", obj, "?")
@@ -114,6 +113,7 @@ func (l *Level) Draw() {
 			}
 		}
 	}
+	player := l.player
 	ui.Draw(player.Img(), player.Pos.X*D, player.Pos.Y*D)
 }
 
@@ -125,8 +125,18 @@ func DecodeLevel(data string) *Level {
 
 	l := &Level{}
 
-	l.layer[0] = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
-	l.layer[1] = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
+	for i := range l.list {
+		l.list[i], l.layer[i] = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
+	}
+	// init iterator
+	l.iter = make([]Pt, len(l.list[0]))
+	k := 0
+	for i := range l.layer[0] {
+		for j := range l.layer[0][i] {
+			l.iter[k] = Pt{j, i}
+			k++
+		}
+	}
 
 	for i := range ld.Blocks {
 		for j, id := range ld.Blocks[i] {
@@ -134,7 +144,8 @@ func DecodeLevel(data string) *Level {
 			switch obj := obj.(type) {
 			case *Player:
 				fmt.Println("decode:", j, i, "player")
-				player.Pos = Pt{j, i}
+				l.player = obj
+				l.player.Pos = Pt{j, i}
 			case IsLayer1:
 				fmt.Println("decode:layer1:", j, i, obj)
 				l.layer[1][i][j] = obj
@@ -147,52 +158,11 @@ func DecodeLevel(data string) *Level {
 	return l
 }
 
-func makeLayer(w, h int) [][]Obj {
+func makeLayer(w, h int) ([]Obj, [][]Obj) {
 	list := make([]Obj, w*h)
 	grid := make([][]Obj, h)
 	for j := range grid {
 		grid[j] = list[(j)*w : (j+1)*w]
 	}
-	return grid
-}
-
-type LevelData struct {
-	Blocks [][]int
-}
-
-func Encode(d *LevelData) string {
-	var buf bytes.Buffer
-	enc64 := base64.NewEncoder(base64.URLEncoding, &buf)
-	defer enc64.Close()
-
-	gz := gzip.NewWriter(enc64)
-	defer gz.Close()
-
-	gobEnc := gob.NewEncoder(gz)
-	if err := gobEnc.Encode(d); err != nil {
-		log.Fatal(err)
-	}
-	gz.Flush()
-	return buf.String()
-
-	//buf.WriteByte(byte(len(d.Blocks)))
-	//buf.WriteByte(byte(len(d.Blocks[0])))
-	//for i:=range d.Blocks{
-	//	for j:=range d.Blocks{}
-	//}
-}
-
-func Decode(data string) (LevelData, error) {
-	in := strings.NewReader(data)
-	dec64 := base64.NewDecoder(base64.URLEncoding, in)
-	gz, err := gzip.NewReader(dec64)
-	if err != nil {
-		return LevelData{}, err
-	}
-	gobDec := gob.NewDecoder(gz)
-	var ld LevelData
-	if err := gobDec.Decode(&ld); err != nil {
-		return LevelData{}, err
-	}
-	return ld, nil
+	return list, grid
 }

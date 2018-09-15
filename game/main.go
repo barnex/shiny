@@ -13,7 +13,7 @@ var (
 
 func Main() {
 	currLevel = DecodeLevel(
-		`H4sIAAAAAAAA_1L-38jMyMjpk1qWmuOSWJLI-L-JgZGRkc0pJz85u5jxfxsDA4PY_1YmRkb26Njo2My8EpAY4_8WBgae_81MjEz_WxgYWRgY_jFO_d_EKCDBxMTEgA1IMLHIMAgIiYgxODi5uDFIyMhJSUAkGGQYGDi4ePgYDIxMzJB1gCTAwMLKxg5FAgeQYDLQYHCQsWBiQHMEQocWug4jBh0nCSsMNyPZAdfChCoBt4ONCburoEGB27l0kGAAAAAA`,
+		`H4sIAAAAAAAA_5SQzUrDQBSFz72W-kORIlIuMpQhhlBESikipYiUUFz5BqWLIl2IRRcW98boG_i6XrkZkQSSRc9mYL754Jw51_c9osP79dt6M19tV6QZiKidbl4enl5JvwD09JOJ9hfLxfLxeWt3pDnQ0Q8m1hzUAn7oWzPqCjOjLsIth-7JaQ-zdH4Hcf0zCQAOODjqHGM0vrouGwaKTKY3t3bGcRxAQ4RHA8zchMGcCJII3vuqcQEMDfwbY1ymMrXOQ5QBykpIMUw8BkUXMEfhVZvrW_19hYHEipvXrwyE81HdjsaBOwP8AgAA`,
 	)
 
 	keypress := make(chan string)
@@ -36,10 +36,13 @@ func Main() {
 	}
 }
 
-func handleTick() {}
+func handleTick() {
+
+}
 
 func handleKey(keyCode string) {
 	fmt.Println("handleKey:", keyCode)
+	player := currLevel.player
 	switch keyCode {
 	case "ArrowLeft", "s", "h":
 		player.Move(Left)

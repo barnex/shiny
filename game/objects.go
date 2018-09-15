@@ -6,12 +6,12 @@ import (
 	ui "github.com/barnex/shiny/frontend"
 )
 
+//singletons
 var (
-	tile   = &Tile{Sprite: "tile"}
-	brick  = &Brick{Sprite: "brick"}
-	player = &Player{Sprite: "player"}
-	exit   = &Exit{Sprite: "exit"}
-	water  = &Water{Sprite: "water"}
+	tile  = &Tile{Sprite: "tile"}
+	brick = &Brick{Sprite: "brick"}
+	exit  = &Exit{Sprite: "exit"}
+	water = &Water{Sprite: "water"}
 )
 
 // ObjProto maps integers onto a prototype object.
@@ -24,7 +24,7 @@ func DecodeObj(id int) Obj {
 	case 1:
 		return brick
 	case 2:
-		return player
+		return &Player{Sprite: "player"}
 	case 3:
 		return exit
 	case 4:
@@ -124,7 +124,8 @@ type Tile struct{ Sprite }
 
 type Player struct {
 	Sprite
-	Pos Pt
+	Pos         Pt
+	hasFlippers bool
 }
 
 func (p *Player) Move(dir Pt) {
@@ -134,6 +135,10 @@ func (p *Player) Move(dir Pt) {
 
 	if !currLevel.CanMove0(src, dir) {
 		return
+	}
+
+	if currLevel.At0(dst) == water && !p.hasFlippers {
+		return // don't commit suicide by drowning, may remove if game too easy
 	}
 
 	{
@@ -182,22 +187,31 @@ type Key struct {
 
 func (k *Key) Grab(pos Pt) {
 	fmt.Println("key:grab")
-	for i := range currLevel.layer[0] {
-		for j, obj := range currLevel.layer[0][i] {
-			if l, ok := obj.(*Lock); ok {
-				if l.ID == k.ID {
-					fmt.Println("key:grab:open:", l)
-					currLevel.Set0(Pt{j, i}, tile)
-				}
+
+	for _, pos := range currLevel.iter {
+		obj := currLevel.At0(pos)
+		if l, ok := obj.(*Lock); ok {
+			if l.ID == k.ID {
+				fmt.Println("key:grab:open:", l)
+				currLevel.Set0(pos, tile)
 			}
 		}
 	}
 	currLevel.Set0(pos, tile) // key disappears
 }
 
-type Water struct{ Sprite }
+type Water struct {
+	Sprite
+}
 
-type Flippers struct{ Sprite }
+type Flippers struct {
+	Sprite
+}
+
+func (f *Flippers) Step(pos Pt) {
+	currLevel.player.hasFlippers = true
+	currLevel.Set0(pos, tile)
+}
 
 type Crate struct {
 	Sprite
@@ -236,13 +250,12 @@ type Button struct {
 
 func (b *Button) Step(_ Pt) {
 	fmt.Println("button:step")
-	for i := range currLevel.layer[0] {
-		for _, obj := range currLevel.layer[0][i] {
-			if g, ok := obj.(*Gate); ok {
-				if g.ID == b.ID {
-					fmt.Println("botton:step:toggle:", g)
-					g.Closed = !g.Closed
-				}
+	for _, pos := range currLevel.iter {
+		obj := currLevel.At0(pos)
+		if g, ok := obj.(*Gate); ok {
+			if g.ID == b.ID {
+				fmt.Println("botton:step:toggle:", g)
+				g.Closed = !g.Closed
 			}
 		}
 	}
