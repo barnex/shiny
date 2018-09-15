@@ -49,13 +49,13 @@ func (l *Level) move(src, dir Pt) {
 	dst := src.Add(dir)
 	l.layer[1][dst.Y][dst.X] = l.layer[1][src.Y][src.X]
 	l.layer[1][src.Y][src.X] = nil
-	Step(l.At0(dst))
+	Step(dst, l.At0(dst))
 }
 
-func Step(obj Obj) {
+func Step(p Pt, obj Obj) {
 	fmt.Println("step", obj, "?")
-	if s, ok := obj.(interface{ Step() }); ok {
-		s.Step()
+	if s, ok := obj.(interface{ Step(Pt) }); ok {
+		s.Step(p)
 	}
 }
 

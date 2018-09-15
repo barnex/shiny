@@ -149,7 +149,11 @@ func (p *Player) Move(dir Pt) {
 
 	// finally, can walk
 	p.Pos = dst
-	Step(currLevel.At0(dst))
+	obj := currLevel.At0(dst)
+	Step(dst, obj)
+	if key, ok := obj.(*Key); ok {
+		key.StepPlayer(dst)
+	}
 }
 
 func PlayerCanWalk(o Obj) bool {
@@ -174,6 +178,21 @@ type Lock struct {
 type Key struct {
 	Sprite
 	ID int
+}
+
+func (k *Key) StepPlayer(pos Pt) {
+	fmt.Println("key:step")
+	for i := range currLevel.layer[0] {
+		for j, obj := range currLevel.layer[0][i] {
+			if l, ok := obj.(*Lock); ok {
+				if l.ID == k.ID {
+					fmt.Println("key:step:open:", l)
+					currLevel.Set0(Pt{j, i}, tile)
+				}
+			}
+		}
+	}
+	currLevel.Set0(pos, tile)
 }
 
 type Water struct{ Sprite }
@@ -215,7 +234,7 @@ type Button struct {
 	ID int
 }
 
-func (b *Button) Step() {
+func (b *Button) Step(_ Pt) {
 	fmt.Println("button:step")
 	for i := range currLevel.layer[0] {
 		for _, obj := range currLevel.layer[0][i] {
