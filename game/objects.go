@@ -128,6 +128,11 @@ type Player struct {
 	hasFlippers bool
 }
 
+func (p *Player) Kill() {
+	fmt.Println("player:kill")
+	// TODO
+}
+
 func (p *Player) Move(dir Pt) {
 	fmt.Println("player:move:", dir)
 	src := p.Pos
@@ -236,6 +241,14 @@ func (c *Crate) Bump(src, dir Pt) {
 }
 
 type Bomb struct{ Sprite }
+
+func (b *Bomb) Step(p Pt) {
+	currLevel.Set0(p, tile)
+	currLevel.Set1(p, nil)
+	if currLevel.player.Pos == p {
+		currLevel.player.Kill()
+	}
+}
 
 type Walker struct {
 	Sprite
