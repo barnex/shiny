@@ -49,10 +49,11 @@ func (l *Level) move(src, dir Pt) {
 	dst := src.Add(dir)
 	l.layer[1][dst.Y][dst.X] = l.layer[1][src.Y][src.X]
 	l.layer[1][src.Y][src.X] = nil
-	Step(dst, l.At0(dst))
+	l.Step(dst)
 }
 
-func Step(p Pt, obj Obj) {
+func (l *Level) Step(p Pt) {
+	obj := l.At0(p)
 	fmt.Println("step", obj, "?")
 	if s, ok := obj.(interface{ Step(Pt) }); ok {
 		s.Step(p)
@@ -77,7 +78,6 @@ func (l *Level) at(layer int, p Pt) Obj {
 	return l.layer[layer][p.Y][p.X]
 }
 
-// TODO: use everywhere
 func (l *Level) Set0(p Pt, o Obj) {
 	if _, ok := o.(IsLayer1); ok {
 		panic("layer1 object in layer0")

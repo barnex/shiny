@@ -149,10 +149,10 @@ func (p *Player) Move(dir Pt) {
 
 	// finally, can walk
 	p.Pos = dst
+	currLevel.Step(dst)
 	obj := currLevel.At0(dst)
-	Step(dst, obj)
 	if key, ok := obj.(*Key); ok {
-		key.StepPlayer(dst)
+		key.Grab(dst)
 	}
 }
 
@@ -180,19 +180,19 @@ type Key struct {
 	ID int
 }
 
-func (k *Key) StepPlayer(pos Pt) {
-	fmt.Println("key:step")
+func (k *Key) Grab(pos Pt) {
+	fmt.Println("key:grab")
 	for i := range currLevel.layer[0] {
 		for j, obj := range currLevel.layer[0][i] {
 			if l, ok := obj.(*Lock); ok {
 				if l.ID == k.ID {
-					fmt.Println("key:step:open:", l)
+					fmt.Println("key:grab:open:", l)
 					currLevel.Set0(Pt{j, i}, tile)
 				}
 			}
 		}
 	}
-	currLevel.Set0(pos, tile)
+	currLevel.Set0(pos, tile) // key disappears
 }
 
 type Water struct{ Sprite }
