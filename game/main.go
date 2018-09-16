@@ -12,9 +12,7 @@ var (
 )
 
 func Main() {
-	currLevel = DecodeLevel(
-		`H4sIAAAAAAAA_5SQzUrDQBSFz72W-kORIlIuMpQhhlBESikipYiUUFz5BqWLIl2IRRcW98boG_i6XrkZkQSSRc9mYL754Jw51_c9osP79dt6M19tV6QZiKidbl4enl5JvwD09JOJ9hfLxfLxeWt3pDnQ0Q8m1hzUAn7oWzPqCjOjLsIth-7JaQ-zdH4Hcf0zCQAOODjqHGM0vrouGwaKTKY3t3bGcRxAQ4RHA8zchMGcCJII3vuqcQEMDfwbY1ymMrXOQ5QBykpIMUw8BkUXMEfhVZvrW_19hYHEipvXrwyE81HdjsaBOwP8AgAA`,
-	)
+	currLevel = DecodeLevel(AllLevels[0])
 
 	keypress := make(chan string)
 	//keyup := make(chan string)

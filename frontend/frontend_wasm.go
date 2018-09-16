@@ -12,34 +12,45 @@ var (
 	ctx      = canvas.Call("getContext", "2d")
 )
 
+func consume(event js.Value) {
+	event.Call("stopPropagation")
+	event.Call("preventDefault")
+}
+
+const bubblePhase = true
+
 func OnKeyDown(f func(string)) {
 	document.Call("addEventListener", "keydown", js.NewCallback(func(arg []js.Value) {
+		consume(arg[0])
 		key := arg[0].Get("key").String()
 		f(key)
-	}), true)
+	}), bubblePhase)
 }
 
 func OnKeyUp(f func(string)) {
 	document.Call("addEventListener", "keyup", js.NewCallback(func(arg []js.Value) {
+		consume(arg[0])
 		key := arg[0].Get("key").String()
 		f(key)
-	}), true)
+	}), bubblePhase)
 }
 
 func OnKeyPress(f func(string)) {
 	document.Call("addEventListener", "keypress", js.NewCallback(func(arg []js.Value) {
+		consume(arg[0])
 		key := arg[0].Get("key").String()
 		f(key)
-	}), true)
+	}), bubblePhase)
 }
 
 func OnMouseDown(f func(x, y int)) {
 	canvas.Call("addEventListener", "mousedown", js.NewCallback(func(arg []js.Value) {
+		consume(arg[0])
 		rect := canvas.Call("getBoundingClientRect")
 		x := arg[0].Get("clientX").Int() - rect.Get("left").Int()
 		y := arg[0].Get("clientY").Int() - rect.Get("top").Int()
 		f(x, y)
-	}))
+	}), bubblePhase)
 }
 
 func LoadImg(src string) Img {

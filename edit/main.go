@@ -21,9 +21,7 @@ var (
 	//w, h      = 24, 16
 	D = game.D
 	//	level = game.LevelData{Blocks: makeBord(26, 16)}
-	level, _ = game.Decode(
-		`H4sIAAAAAAAA_1L-38jMyMjpk1qWmuOSWJLI-L-JgZGRkc0pJz85u5jxfxsDA4PY_1YmRkb26Njo2My8EpAY4_8WBgae_81MjEz_WxgYWRgY_jFO_d_EKCDBxMTEgA1IMLHIMAgIiYgxODi5uDFIyMhJSUAkGGQYGDi4ePgYDIxMzJB1gCTAwMLKxg5FAgeQYDLQYHCQsWBiQHMEQocWug4jBh0nCSsMNyPZAdfChCoBt4ONCburoEGB27l0kGAAAAAA`,
-	)
+	level, _  = game.Decode(game.AllLevels[0])
 	mouseDown = false
 )
 
@@ -38,12 +36,27 @@ func main() {
 	fmt.Println("WebAssembly running")
 
 	ui.OnMouseDown(onMouseDown)
+	ui.OnKeyDown(onKeyDown)
 
 	selImg = game.GetImg("sel")
 
 	redraw()
 
 	<-(make(chan int))
+}
+
+func onKeyDown(keyCode string) {
+	if keyCode == "p" {
+		uploadLevel()
+		if level.Num == len(game.AllLevels)-1 {
+			game.AllLevels = append(game.AllLevels, game.Encode(&game.LevelData{Num: level.Num + 1, Blocks: makeBord(26, 16)}))
+		}
+		var err error
+		level, err = game.Decode(game.AllLevels[level.Num+1])
+		if err != nil {
+			panic(err)
+		}
+	}
 }
 
 func onMouseDown(x, y int) {
@@ -59,7 +72,6 @@ func onMouseDown(x, y int) {
 func bordClick(i, j int) {
 	if i < w() && j < h() {
 		level.Blocks[j][i] = paletteSel
-		uploadLevel()
 	}
 	redraw()
 }
