@@ -22,6 +22,7 @@ var (
 	D = game.D
 	//	level = game.LevelData{Blocks: makeBord(26, 16)}
 	level, _  = game.Decode(game.AllLevels[0])
+	levelNum  = 0
 	mouseDown = false
 )
 
@@ -56,13 +57,13 @@ func onKeyDown(keyCode string) {
 
 func nextLevel() {
 	uploadLevel()
-	if level.Num == len(game.AllLevels)-1 {
+	levelNum++
+	if levelNum == len(game.AllLevels) {
 		game.AllLevels = append(game.AllLevels, game.Encode(&game.LevelData{Num: level.Num + 1, Blocks: makeBord(26, 16)}))
 	}
 	var err error
-	next := level.Num + 1
-	level, err = game.Decode(game.AllLevels[next])
-	level.Num = next
+	level, err = game.Decode(game.AllLevels[levelNum])
+	level.Num = levelNum
 	if err != nil {
 		panic(err)
 	}

@@ -258,6 +258,10 @@ type Walker struct {
 	ts  int
 }
 
+func (w *Walker) Deadly() bool {
+	return true
+}
+
 func (w *Walker) Img() ui.Img {
 	switch w.Dir {
 	default:
