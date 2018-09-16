@@ -46,16 +46,23 @@ func main() {
 }
 
 func onKeyDown(keyCode string) {
-	if keyCode == "p" {
-		uploadLevel()
-		if level.Num == len(game.AllLevels)-1 {
-			game.AllLevels = append(game.AllLevels, game.Encode(&game.LevelData{Num: level.Num + 1, Blocks: makeBord(26, 16)}))
-		}
-		var err error
-		level, err = game.Decode(game.AllLevels[level.Num+1])
-		if err != nil {
-			panic(err)
-		}
+	switch keyCode {
+	default:
+	case "p":
+		nextLevel()
+	}
+	redraw()
+}
+
+func nextLevel() {
+	uploadLevel()
+	if level.Num == len(game.AllLevels)-1 {
+		game.AllLevels = append(game.AllLevels, game.Encode(&game.LevelData{Num: level.Num + 1, Blocks: makeBord(26, 16)}))
+	}
+	var err error
+	level, err = game.Decode(game.AllLevels[level.Num+1])
+	if err != nil {
+		panic(err)
 	}
 }
 

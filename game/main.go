@@ -31,7 +31,24 @@ func Main() {
 		}
 		// check dead, etc
 		currLevel.Draw()
+		checkExit()
 	}
+}
+
+func checkExit() {
+	pos := currLevel.player.Pos
+	if currLevel.At0(pos) == exit {
+		nextLevel()
+	}
+}
+
+func nextLevel() {
+	n := currLevel.num + 1
+	if n == len(AllLevels) {
+		n = 0
+	}
+	currLevel = DecodeLevel(AllLevels[n])
+	currLevel.Draw()
 }
 
 func handleTick() {

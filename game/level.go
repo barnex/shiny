@@ -14,6 +14,7 @@ type Level struct {
 	list   [2][]Obj
 	iter   []Pt
 	player *Player
+	num    int
 }
 
 var now = 0
@@ -152,7 +153,7 @@ func DecodeLevel(data string) *Level {
 		log.Fatal(err)
 	}
 
-	l := &Level{}
+	l := &Level{num: ld.Num}
 
 	for i := range l.list {
 		l.list[i], l.layer[i] = makeLayer(len(ld.Blocks[0]), len(ld.Blocks))
