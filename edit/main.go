@@ -60,7 +60,9 @@ func nextLevel() {
 		game.AllLevels = append(game.AllLevels, game.Encode(&game.LevelData{Num: level.Num + 1, Blocks: makeBord(26, 16)}))
 	}
 	var err error
-	level, err = game.Decode(game.AllLevels[level.Num+1])
+	next := level.Num + 1
+	level, err = game.Decode(game.AllLevels[next])
+	level.Num = next
 	if err != nil {
 		panic(err)
 	}

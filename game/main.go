@@ -12,7 +12,8 @@ var (
 )
 
 func Main() {
-	currLevel = DecodeLevel(AllLevels[0])
+
+	loadLevel(0)
 
 	keypress := make(chan string)
 	//keyup := make(chan string)
@@ -35,6 +36,12 @@ func Main() {
 	}
 }
 
+func loadLevel(i int) {
+	currLevel = DecodeLevel(AllLevels[i])
+	currLevel.num = i
+	currLevel.Draw()
+}
+
 func checkExit() {
 	pos := currLevel.player.Pos
 	if currLevel.At0(pos) == exit {
@@ -47,8 +54,7 @@ func nextLevel() {
 	if n == len(AllLevels) {
 		n = 0
 	}
-	currLevel = DecodeLevel(AllLevels[n])
-	currLevel.Draw()
+	loadLevel(n)
 }
 
 func handleTick() {
