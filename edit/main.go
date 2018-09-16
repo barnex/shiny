@@ -18,9 +18,7 @@ var (
 
 	splitW = 10
 
-	//w, h      = 24, 16
-	D = game.D
-	//	level = game.LevelData{Blocks: makeBord(26, 16)}
+	D         = game.D
 	level, _  = game.Decode(game.AllLevels[0])
 	levelNum  = 0
 	mouseDown = false
@@ -59,7 +57,7 @@ func nextLevel() {
 	uploadLevel()
 	levelNum++
 	if levelNum == len(game.AllLevels) {
-		game.AllLevels = append(game.AllLevels, game.Encode(&game.LevelData{Num: level.Num + 1, Blocks: makeBord(26, 16)}))
+		game.AllLevels = append(game.AllLevels, game.Encode(&game.LevelData{Num: level.Num + 1, Blocks: makeBord(30, 16)}))
 	}
 	var err error
 	level, err = game.Decode(game.AllLevels[levelNum])
