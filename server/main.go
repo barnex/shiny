@@ -3,42 +3,43 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
+	"path"
 )
 
 var (
-	listen = flag.String("http", ":8080", "listen address")
-	dir    = flag.String("dir", ".", "directory to serve")
+	flagPort   = flag.String("http", ":8080", "listen address")
+	flagDir    = flag.String("dir", ".", "directory to serve")
+	flagLevels = flag.String("levels", "levels", "directory to save levels")
 )
 
 func main() {
 	flag.Parse()
-	log.Printf("listening on %q...", *listen)
-	fs := http.FileServer(http.Dir(*dir))
-	log.Fatal(http.ListenAndServe(*listen,
 
-		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			log.Println(r.Method, r.URL.Path)
-			switch r.Method {
-			default:
-				http.Error(w, "bad request", http.StatusBadRequest)
-			case "GET":
-				fs.ServeHTTP(w, r)
-			case "PUT":
-				handleUpload(w, r)
-			}
+	fs := http.FileServer(http.Dir(*flagDir))
+	http.Handle("/", withLog(fs))
+	http.Handle("/put/", withLog(http.StripPrefix("/put/", http.HandlerFunc(handlePut))))
 
-		})))
+	log.Printf("listening on %v", *flagPort)
+	log.Fatal(http.ListenAndServe(*flagPort, nil))
 }
 
-func handleUpload(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-	data, err := ioutil.ReadAll(r.Body)
-	if err == nil {
-		fmt.Println("upload:", err)
+func handlePut(w http.ResponseWriter, r *http.Request) {
+	levelNum := path.Dir(r.URL.Path)
+	f, err := os.Create(path.Join(*flagLevels, levelNum+".level"))
+	if err != nil {
+		fmt.Println(err)
 		return
 	}
-	fmt.Println("upload:", string(data))
+	defer f.Close()
+	f.WriteString(path.Base(r.URL.Path))
+}
+
+func withLog(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.Method, r.URL.Path)
+		h.ServeHTTP(w, r)
+	})
 }

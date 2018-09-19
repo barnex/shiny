@@ -93,7 +93,7 @@ func uploadLevel() {
 		log.Fatal(err)
 	}
 	level = l
-	dummyImg.Set("src", data)
+	dummyImg.Set("src", "put/"+fmt.Sprint(levelNum)+"/"+data)
 }
 
 func paletteClick(i, j int) {
