@@ -35,6 +35,8 @@ func main() {
 	fmt.Println("WebAssembly running")
 
 	ui.OnMouseDown(onMouseDown)
+	//ui.OnMouseUp(onMouseUp)
+	ui.OnMouseMove(onMouseMove)
 	ui.OnKeyDown(onKeyDown)
 
 	selImg = game.GetImg("sel")
@@ -73,6 +75,12 @@ func onMouseDown(x, y int) {
 	} else {
 		i, j := (x-paletteW*D-splitW)/D, y/D
 		bordClick(i, j)
+	}
+}
+
+func onMouseMove(x, y int, buttons int32) {
+	if buttons == 1 {
+		onMouseDown(x, y)
 	}
 }
 

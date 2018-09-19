@@ -53,6 +53,16 @@ func OnMouseDown(f func(x, y int)) {
 	}), bubblePhase)
 }
 
+func OnMouseMove(f func(x, y int, buttons int32)) {
+	canvas.Call("addEventListener", "mousemove", js.NewCallback(func(arg []js.Value) {
+		consume(arg[0])
+		rect := canvas.Call("getBoundingClientRect")
+		x := arg[0].Get("clientX").Int() - rect.Get("left").Int()
+		y := arg[0].Get("clientY").Int() - rect.Get("top").Int()
+		f(x, y, int32(arg[0].Get("buttons").Int()))
+	}), bubblePhase)
+}
+
 func LoadImg(src string) Img {
 	var wg sync.WaitGroup
 	wg.Add(1)
