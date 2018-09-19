@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path"
 )
 
@@ -27,6 +28,11 @@ func main() {
 }
 
 func handlePut(w http.ResponseWriter, r *http.Request) {
+	saveLevel(w, r)
+	buildLevels()
+}
+
+func saveLevel(w http.ResponseWriter, r *http.Request) {
 	levelNum := path.Dir(r.URL.Path)
 	f, err := os.Create(path.Join(*flagLevels, levelNum+".level"))
 	if err != nil {
@@ -35,6 +41,14 @@ func handlePut(w http.ResponseWriter, r *http.Request) {
 	}
 	defer f.Close()
 	f.WriteString(path.Base(r.URL.Path))
+}
+
+func buildLevels() {
+	out, err := exec.Command("./build_levels.sh").CombinedOutput()
+	os.Stderr.Write(out)
+	if err != nil {
+		fmt.Println(err)
+	}
 }
 
 func withLog(h http.Handler) http.Handler {
