@@ -10,7 +10,6 @@ import (
 )
 
 type LevelData struct {
-	Num    int // TODO: rm
 	Blocks [][]int
 }
 

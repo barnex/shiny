@@ -34,6 +34,7 @@ func handlePut(w http.ResponseWriter, r *http.Request) {
 
 func saveLevel(w http.ResponseWriter, r *http.Request) {
 	levelNum := path.Dir(r.URL.Path)
+	fmt.Println("save", levelNum)
 	f, err := os.Create(path.Join(*flagLevels, levelNum+".level"))
 	if err != nil {
 		fmt.Println(err)
@@ -44,11 +45,14 @@ func saveLevel(w http.ResponseWriter, r *http.Request) {
 }
 
 func buildLevels() {
+	fmt.Println("rebuild")
 	out, err := exec.Command("./build_levels.sh").CombinedOutput()
 	os.Stderr.Write(out)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
+	fmt.Println("rebuild OK")
 }
 
 func withLog(h http.Handler) http.Handler {

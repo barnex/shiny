@@ -9,11 +9,12 @@ import (
 
 var (
 	currLevel *Level
+	currNum   int
 )
 
 func Main() {
 
-	loadLevel(0)
+	loadLevel(currNum)
 
 	keypress := make(chan string)
 	//keyup := make(chan string)
@@ -49,12 +50,12 @@ func handleCheat(keycode string) {
 
 func restartLevel() {
 	time.Sleep(time.Second)
-	loadLevel(currLevel.num)
+	loadLevel(currNum)
 }
 
 func loadLevel(i int) {
 	currLevel = DecodeLevel(AllLevels[i])
-	currLevel.num = i
+	currNum = i
 	currLevel.Draw()
 }
 
@@ -75,7 +76,7 @@ func checkExit() {
 }
 
 func nextLevel() {
-	n := currLevel.num + 1
+	n := currNum + 1
 	if n == len(AllLevels) {
 		n = 0
 	}
