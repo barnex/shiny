@@ -138,7 +138,7 @@ func (p *Player) Move(dir Pt) {
 	src := p.Pos
 	dst := src.Add(dir)
 
-	if !currLevel.CanMove0(src, dir) && !(currLevel.At0(dst) == water && p.hasFlippers) {
+	if !currLevel.CanMove0(src, dir) {
 		return
 	}
 
@@ -207,7 +207,13 @@ func (k *Key) Grab(pos Pt) {
 
 type Water struct {
 	Sprite
-	cantWalk
+}
+
+func (w *Water) Step(pos Pt) {
+	if _, ok := currLevel.At1(pos).(*Crate); ok {
+		currLevel.Set1(pos, nil)
+		currLevel.Set0(pos, tile)
+	}
 }
 
 type Flippers struct {
@@ -278,6 +284,9 @@ func (w *Walker) Img() ui.Img {
 }
 
 func (w *Walker) Tick(pos Pt) {
+	if now&0x1 != 0 {
+		return
+	}
 	defer w.setTS()
 	if w.ts == now {
 		return

@@ -21,7 +21,7 @@ func Main() {
 	ui.OnKeyPress(func(key string) { keypress <- key })
 	//ui.OnKeyUp(func(key string) { keyup <- key })
 
-	ticker := time.Tick(500 * time.Millisecond)
+	ticker := time.Tick(250 * time.Millisecond)
 
 	currLevel.Draw()
 	for {
