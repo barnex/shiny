@@ -7,10 +7,26 @@ import (
 )
 
 var (
+	window   = js.Global().Get("window")
 	document = js.Global().Get("document")
 	canvas   = document.Call("getElementById", "canvas")
 	ctx      = canvas.Call("getContext", "2d")
 )
+
+func init() {
+	window.Call("addEventListener", "resize", js.NewCallback(func(arg []js.Value) {
+		maximize()
+	}))
+	maximize()
+}
+
+func maximize() {
+	w := window.Get("innerWidth").Int()
+	h := window.Get("innerHeight").Int()
+	fmt.Println("resize", w, h)
+	canvas.Set("width", w)
+	canvas.Set("height", h)
+}
 
 func consume(event js.Value) {
 	event.Call("stopPropagation")

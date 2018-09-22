@@ -11,7 +11,7 @@ license that can be found in the LICENSE file.
 	<title>Go wasm</title>
 </head>
 
-<body>
+<body style="margin-left:0;margin-top:0;overflow:hidden;">
 	<script src="wasm_exec.js"></script>
 	<script>
 		if (!WebAssembly.instantiateStreaming) { // polyfill
@@ -31,7 +31,7 @@ license that can be found in the LICENSE file.
 
 	</script>
 
-	<canvas id="canvas" width="1920" height="1080" style="border:0px;">
+	<canvas id="canvas" style="border:0px; pad-left:0;">
 	</canvas>
 
 </html>
