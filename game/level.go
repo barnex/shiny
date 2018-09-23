@@ -7,7 +7,7 @@ import (
 	ui "github.com/barnex/shiny/frontend"
 )
 
-const D = 64
+const D = 45
 
 type Level struct {
 	layer  [2][][]Obj

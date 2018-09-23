@@ -59,13 +59,22 @@ func nextLevel() {
 	uploadLevel()
 	levelNum++
 	if levelNum == len(game.AllLevels) {
-		game.AllLevels = append(game.AllLevels, game.Encode(&game.LevelData{Blocks: makeBord(30, 16)}))
+		game.AllLevels = append(game.AllLevels, game.Encode(newLevelData()))
 	}
-	var err error
-	level, err = game.Decode(game.AllLevels[levelNum])
+	l, err := game.Decode(game.AllLevels[levelNum])
 	if err != nil {
 		panic(err)
 	}
+	level = newLevelData() // resize to new size
+	for i := range l.Blocks {
+		for j := range l.Blocks[i] {
+			level[i][j] = l[i][j]
+		}
+	}
+}
+
+func newLevelData() *game.LevelData {
+	return &game.LevelData{Blocks: makeBord(43, 24)}
 }
 
 func onMouseDown(x, y int) {
