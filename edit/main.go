@@ -34,7 +34,7 @@ func h() int {
 func main() {
 	fmt.Println("WebAssembly running")
 
-	game.AllLevels = append(game.AllLevels, game.Encode(newLevelData()))
+	game.AllLevels = append(game.AllLevels, game.Encode(newLevelData(43, 24)))
 
 	levelNum = -1
 	nextLevel()
@@ -58,8 +58,30 @@ func onKeyDown(keyCode string) {
 		nextLevel()
 	case "w":
 		uploadLevel()
+	case "f":
+		transl(game.Right)
+	case "s":
+		transl(game.Left)
+	case "e":
+		transl(game.Up)
+	case "d":
+		transl(game.Down)
 	}
 	redraw()
+}
+
+func transl(p game.Pt) {
+	t := newLevelData(w(), h())
+	for i := range t.Blocks {
+		for j := range t.Blocks[i] {
+			I := i + p.Y
+			J := j + p.X
+			if I >= 0 && I < len(t.Blocks) && J >= 0 && J < len(t.Blocks[i]) {
+				t.Blocks[I][J] = level.Blocks[i][j]
+			}
+		}
+	}
+	level = *t
 }
 
 func nextLevel() {
@@ -71,7 +93,7 @@ func nextLevel() {
 	if err != nil {
 		panic(err)
 	}
-	level = *newLevelData() // resize to new size
+	level = *newLevelData(43, 24) // resize to new size
 	for i := range l.Blocks {
 		for j, b := range l.Blocks[i] {
 			level.Blocks[i][j] = b
@@ -79,8 +101,8 @@ func nextLevel() {
 	}
 }
 
-func newLevelData() *game.LevelData {
-	return &game.LevelData{Blocks: makeBord(43, 24)}
+func newLevelData(w, h int) *game.LevelData {
+	return &game.LevelData{Blocks: makeBord(w, h)}
 }
 
 func onMouseDown(x, y int) {
