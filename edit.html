@@ -8,13 +8,10 @@ license that can be found in the LICENSE file.
 
 <head>
 	<meta charset="utf-8">
-	<title>Edit</title>
-
-	<style>
-	</style>
+	<title>Go wasm</title>
 </head>
 
-<body>
+<body style="margin-left:0;margin-top:0;overflow:hidden;">
 	<script src="wasm_exec.js"></script>
 	<script>
 		if (!WebAssembly.instantiateStreaming) { // polyfill
@@ -23,6 +20,7 @@ license that can be found in the LICENSE file.
 				return await WebAssembly.instantiate(source, importObject);
 			};
 		}
+
 		const go = new Go();
 		let mod, inst;
 		WebAssembly.instantiateStreaming(fetch("edit.wasm"), go.importObject).then(async (result) => {
@@ -30,12 +28,10 @@ license that can be found in the LICENSE file.
 			inst = result.instance;
 			await go.run(inst);
 		});
+
 	</script>
 
-	<canvas id="canvas" width=2200 height=1080 style="border: solid grey 1px;">
+	<canvas id="canvas" style="border:0px; pad-left:0;">
 	</canvas>
-
-	</div>
-
 
 </html>

@@ -19,7 +19,7 @@ var (
 	splitW = 10
 
 	D         = game.D
-	level, _  = game.Decode(game.AllLevels[0])
+	level     game.LevelData
 	levelNum  = 0
 	mouseDown = false
 )
@@ -33,6 +33,11 @@ func h() int {
 
 func main() {
 	fmt.Println("WebAssembly running")
+
+	game.AllLevels = append(game.AllLevels, game.Encode(newLevelData()))
+
+	levelNum = -1
+	nextLevel()
 
 	ui.OnMouseDown(onMouseDown)
 	//ui.OnMouseUp(onMouseUp)
@@ -49,26 +54,27 @@ func main() {
 func onKeyDown(keyCode string) {
 	switch keyCode {
 	default:
-	case "p":
+	case "n":
 		nextLevel()
+	case "w":
+		uploadLevel()
 	}
 	redraw()
 }
 
 func nextLevel() {
-	uploadLevel()
 	levelNum++
 	if levelNum == len(game.AllLevels) {
-		game.AllLevels = append(game.AllLevels, game.Encode(newLevelData()))
+		levelNum = 0
 	}
 	l, err := game.Decode(game.AllLevels[levelNum])
 	if err != nil {
 		panic(err)
 	}
-	level = newLevelData() // resize to new size
+	level = *newLevelData() // resize to new size
 	for i := range l.Blocks {
-		for j := range l.Blocks[i] {
-			level[i][j] = l[i][j]
+		for j, b := range l.Blocks[i] {
+			level.Blocks[i][j] = b
 		}
 	}
 }
@@ -109,7 +115,7 @@ func uploadLevel() {
 		log.Fatal(err)
 	}
 	level = l
-	dummyImg.Set("src", "put/"+fmt.Sprint(levelNum)+"/"+data)
+	dummyImg.Set("src", "put/"+fmt.Sprintf("%02d", levelNum)+"/"+data)
 }
 
 func paletteClick(i, j int) {
